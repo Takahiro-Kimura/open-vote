@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "src/open-vote-backend"
+]
+resolver = "2"
