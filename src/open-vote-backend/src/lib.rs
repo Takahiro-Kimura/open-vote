@@ -1,5 +1,6 @@
 use candid::CandidType;
 use ic_cdk::caller;
+use ic_cdk::api;
 use ic_cdk_macros::*;
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
@@ -51,7 +52,8 @@ struct CreatePollRequest {
 #[ic_cdk::update]
 fn create_poll(req: CreatePollRequest) -> Result<PollId, String> {
     // 投票IDを生成 (現在は固定値)
-    let poll_id = "100".to_string(); // Uuid::new_v4().to_string();
+    let current_time = api::time();
+    let poll_id = current_time.to_string(); // Uuid::new_v4().to_string();
     // 投票作成者のPrincipalを取得
     let creator = caller().to_string();
 
