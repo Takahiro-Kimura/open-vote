@@ -16,7 +16,9 @@ export function PollCard({ poll }: PollCardProps) {
       <CardHeader>
         <h3 className="text-xl font-bold">{poll.question}</h3>
         <p className="text-sm text-muted-foreground">
-          
+          {poll.endTime
+            ? `${formatDistanceToNow(new Date(Number(poll.endTime)))} left`
+            : '無期限'}
         </p>
       </CardHeader>
       <CardContent>

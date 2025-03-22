@@ -75,7 +75,7 @@ class ICClient {
       console.log("Fetching polls...");
       const polls = await this.actor.get_polls();
       console.log("Fetched polls:", polls);
-      return polls || [];
+      return polls ? polls.map((poll: any) => { return { ...poll, endTime: poll.end_time }}) : [];
     } catch (error) {
       console.error("Failed to get polls:", error);
       if (error instanceof Error) {
