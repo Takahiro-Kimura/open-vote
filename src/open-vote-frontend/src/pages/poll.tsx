@@ -21,7 +21,7 @@ export default function Poll() {
   const voteMutation = useMutation({
     mutationFn: () => {
       if (!selectedOption) throw new Error("No option selected");
-      return ic.vote({ pollId: pollId!, optionId: selectedOption });
+      return ic.vote({ pollId: pollId!, option: selectedOption });
     },
     onSuccess: () => {
       toast({
@@ -70,7 +70,7 @@ export default function Poll() {
             >
               {poll.options.map((option, index) => (
                 <div key={index} className="flex items-center space-x-2">
-                  <RadioGroupItem value={index.toString()} id={index.toString()} />
+                  <RadioGroupItem value={option.text} id={index.toString()} />
                   <Label htmlFor={index.toString()}>{option.text}</Label>
                 </div>
               ))}

@@ -37,7 +37,7 @@ export type CreatePoll = z.infer<typeof CreatePollSchema>;
 
 export const VoteRequestSchema = z.object({
   pollId: z.string(),
-  optionId: z.string(),
+  option: z.string(),
 });
 
 export type VoteRequest = z.infer<typeof VoteRequestSchema>;

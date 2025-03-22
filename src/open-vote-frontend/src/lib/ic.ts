@@ -1,7 +1,9 @@
-import type { Poll, CreatePoll, VoteRequest } from '@shared/schema';
+import type { Poll, CreatePoll, VoteRequest } from "@shared/schema";
 // import { Actor, HttpAgent } from '@dfinity/agent';
 // import { idlFactory } from './ic.did';
-import { open_vote_backend } from 'declarations/open-vote-backend';
+import { Actor } from "@dfinity/agent";
+import { AuthClient } from "@dfinity/auth-client";
+import { open_vote_backend } from "declarations/open-vote-backend";
 
 class ICClient {
   //private agent: HttpAgent;
@@ -12,8 +14,8 @@ class ICClient {
     // const fetch = window.fetch.bind(window);
 
     // this.agent = new HttpAgent({
-    //   host: process.env.NODE_ENV === 'production' 
-    //     ? 'https://ic0.app' 
+    //   host: process.env.NODE_ENV === 'production'
+    //     ? 'https://ic0.app'
     //     : 'http://127.0.0.1:4943',
     //   fetch: fetch // 明示的にfetchを指定
     // });
@@ -26,20 +28,31 @@ class ICClient {
     //   });
     // }
 
-    this.actor = open_vote_backend
+    this.actor = open_vote_backend;
   }
 
-  async createPoll(poll: any): Promise<string> {  // todo: anyをCreatePollにする
+  private async changeAgent() {
+    const authClient = await AuthClient.create();
+    const agent = Actor.agentOf(this.actor);
+    if (authClient && agent && agent.replaceIdentity) {
+      agent.replaceIdentity(authClient.getIdentity());
+    }
+    return agent;
+  }
+
+  async createPoll(poll: any): Promise<string> {
+    await this.changeAgent();
+    // todo: anyをCreatePollにする
     try {
-      console.log('Creating poll with data:', poll);
+      console.log("Creating poll with data:", poll);
       const result = await this.actor.create_poll(poll);
-      console.log('Create poll result:', result);
+      console.log("Create poll result:", result);
       return result;
     } catch (error) {
-      console.error('Failed to create poll:', error);
+      console.error("Failed to create poll:", error);
       if (error instanceof Error) {
-        console.error('Error details:', error.message);
-        console.error('Error stack:', error.stack);
+        console.error("Error details:", error.message);
+        console.error("Error stack:", error.stack);
       }
       throw error;
     }
@@ -47,27 +60,27 @@ class ICClient {
 
   async getPoll(id: string): Promise<Poll | null> {
     try {
-      console.log('Getting poll:', id);
+      console.log("Getting poll:", id);
       const result = await this.actor.get_poll(id);
-      console.log('Get poll result:', result);
+      console.log("Get poll result:", result);
       return result.length > 0 ? result[0] : null;
     } catch (error) {
-      console.error('Failed to get poll:', error);
+      console.error("Failed to get poll:", error);
       return null;
     }
   }
 
   async getPolls(): Promise<Poll[]> {
     try {
-      console.log('Fetching polls...');
+      console.log("Fetching polls...");
       const polls = await this.actor.get_polls();
-      console.log('Fetched polls:', polls);
+      console.log("Fetched polls:", polls);
       return polls || [];
     } catch (error) {
-      console.error('Failed to get polls:', error);
+      console.error("Failed to get polls:", error);
       if (error instanceof Error) {
-        console.error('Error details:', error.message);
-        console.error('Error stack:', error.stack);
+        console.error("Error details:", error.message);
+        console.error("Error stack:", error.stack);
       }
       return []; // エラー時は空配列を返す
     }
@@ -75,23 +88,24 @@ class ICClient {
 
   async getUserPolls(principal: string): Promise<Poll[]> {
     try {
-      console.log('Fetching user polls for principal:', principal);
+      console.log("Fetching user polls for principal:", principal);
       const polls = await this.actor.get_user_polls(principal);
-      console.log('Fetched user polls:', polls);
+      console.log("Fetched user polls:", polls);
       return polls || [];
     } catch (error) {
-      console.error('Failed to get user polls:', error);
+      console.error("Failed to get user polls:", error);
       return []; // エラー時は空配列を返す
     }
   }
 
   async vote(request: VoteRequest): Promise<void> {
+    await this.changeAgent();
     try {
-      console.log('Submitting vote:', request);
-      await this.actor.vote(request);
-      console.log('Vote submitted successfully');
+      console.log("Submitting vote:", request);
+      await this.actor.vote(request.pollId, { option: request.option });
+      console.log("Vote submitted successfully");
     } catch (error) {
-      console.error('Failed to vote:', error);
+      console.error("Failed to vote:", error);
       throw error;
     }
   }
@@ -99,11 +113,11 @@ class ICClient {
   async getPrincipal(): Promise<string> {
     try {
       const principal = await this.actor.get_principal();
-      console.log('Got principal:', principal);
+      console.log("Got principal:", principal);
       return principal;
     } catch (error) {
-      console.error('Failed to get principal:', error);
-      return 'anonymous';
+      console.error("Failed to get principal:", error);
+      return "anonymous";
     }
   }
 }
