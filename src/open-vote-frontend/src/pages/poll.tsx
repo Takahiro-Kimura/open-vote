@@ -1,44 +1,44 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useParams } from 'wouter';
-import { queries, QueryKeys } from '@/lib/queries';
-import { PollResults } from '@/components/polls/PollResults';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { useState } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { ic } from '@/lib/ic';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "wouter";
+import { queries, QueryKeys } from "@/lib/queries";
+import { PollResults } from "@/components/polls/PollResults";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ic } from "@/lib/ic";
 
 export default function Poll() {
-  const { id } = useParams();
+  const { id: pollId } = useParams();
   const { toast } = useToast();
   const [selectedOption, setSelectedOption] = useState<string>();
   const queryClient = useQueryClient();
 
-  const { data: poll, isLoading } = useQuery(queries.poll(id));
+  const { data: poll, isLoading } = useQuery(queries.poll(pollId!));
 
   const voteMutation = useMutation({
     mutationFn: () => {
-      if (!selectedOption) throw new Error('No option selected');
-      return ic.vote({ pollId: id, optionId: selectedOption });
+      if (!selectedOption) throw new Error("No option selected");
+      return ic.vote({ pollId: pollId!, optionId: selectedOption });
     },
     onSuccess: () => {
       toast({
-        title: 'Success',
-        description: 'Your vote has been recorded!'
+        title: "Success",
+        description: "Your vote has been recorded!",
       });
       // Invalidate relevant queries
-      queryClient.invalidateQueries(QueryKeys.poll(id));
-      queryClient.invalidateQueries(QueryKeys.polls);
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.poll(pollId!)] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.polls] });
     },
     onError: () => {
       toast({
-        title: 'Error',
-        description: 'Failed to submit vote. Please try again.',
-        variant: 'destructive'
+        title: "Error",
+        description: "Failed to submit vote. Please try again.",
+        variant: "destructive",
       });
-    }
+    },
   });
 
   if (isLoading) {
@@ -57,19 +57,21 @@ export default function Poll() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <h2 className="text-2xl font-semibold mb-4">Cast Your Vote</h2>
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            voteMutation.mutate();
-          }}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              voteMutation.mutate();
+            }}
+          >
             <RadioGroup
               value={selectedOption}
               onValueChange={setSelectedOption}
               className="space-y-4"
             >
-              {poll.options.map((option) => (
-                <div key={option.id} className="flex items-center space-x-2">
-                  <RadioGroupItem value={option.id} id={option.id} />
-                  <Label htmlFor={option.id}>{option.text}</Label>
+              {poll.options.map((option, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <RadioGroupItem value={index.toString()} id={index.toString()} />
+                  <Label htmlFor={index.toString()}>{option.text}</Label>
                 </div>
               ))}
             </RadioGroup>
@@ -78,7 +80,7 @@ export default function Poll() {
               className="mt-4"
               disabled={!selectedOption || voteMutation.isPending}
             >
-              {voteMutation.isPending ? 'Submitting...' : 'Submit Vote'}
+              {voteMutation.isPending ? "Submitting..." : "Submit Vote"}
             </Button>
           </form>
         </div>

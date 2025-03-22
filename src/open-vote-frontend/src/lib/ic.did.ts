@@ -30,7 +30,7 @@ const VoteRequest = IDL.Record({
   'optionId': IDL.Text,
 });
 
-export const idlFactory = ({ IDL }) => {
+export const idlFactory = ({ IDL }: { IDL: any }) => {
   return IDL.Service({
     'create_poll': IDL.Func([CreatePoll], [IDL.Text], ['update']),
     'get_poll': IDL.Func([IDL.Text], [IDL.Opt(Poll)], ['query']),

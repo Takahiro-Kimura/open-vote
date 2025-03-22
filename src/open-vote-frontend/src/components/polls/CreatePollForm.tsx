@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { CreatePoll } from '@shared/schema';
-import { CreatePollSchema } from '@shared/schema';
+import type { Poll } from '@shared/schema';
+import { PollSchema } from '@shared/schema';
 import { Button } from '@/components/ui/button';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -21,13 +21,13 @@ export function CreatePollForm() {
   const [_, setLocation] = useLocation();
   const queryClient = useQueryClient();
 
-  const form = useForm<CreatePoll>({
-    resolver: zodResolver(CreatePollSchema),
+  const form = useForm<Poll>({
+    resolver: zodResolver(PollSchema),
     defaultValues: {
       title: '',
       description: '',
       endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // デフォルトで1週間後
-      options: [{ text: '' }, { text: '' }], // デフォルトで2つの選択肢
+      options: [{ id: '', text: '', count: 0 }, { id: '', text: '', count: 0 }], // デフォルトで2つの選択肢
       isActive: true
     }
   });
@@ -38,7 +38,7 @@ export function CreatePollForm() {
   });
 
   const createPollMutation = useMutation({
-    mutationFn: async (data: CreatePoll) => {
+    mutationFn: async (data: Poll) => {
       // データを整形
       const formattedData = {
         ...data,
@@ -55,7 +55,7 @@ export function CreatePollForm() {
         description: '投票が作成されました！'
       });
       // キャッシュを更新して画面遷移
-      queryClient.invalidateQueries(QueryKeys.polls);
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.polls] });
       setLocation(`/poll/${pollId}`);
     },
     onError: (error) => {
@@ -135,7 +135,7 @@ export function CreatePollForm() {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => append({ text: '' })}
+              onClick={() => append({ id: '', text: '', count: 0 })}
             >
               <Plus className="h-4 w-4 mr-2" />
               選択肢を追加
