@@ -1,34 +1,32 @@
 import type { Poll, CreatePoll, VoteRequest } from '@shared/schema';
-import { Actor, HttpAgent } from '@dfinity/agent';
-import { idlFactory } from './ic.did';
+// import { Actor, HttpAgent } from '@dfinity/agent';
+// import { idlFactory } from './ic.did';
+import { open_vote_backend } from 'declarations/open-vote-backend';
 
 class ICClient {
-  private agent: HttpAgent;
+  //private agent: HttpAgent;
   private actor: any;
 
   constructor() {
-    // グローバルFetchの設定
-    const fetch = window.fetch.bind(window);
+    // // グローバルFetchの設定
+    // const fetch = window.fetch.bind(window);
 
-    this.agent = new HttpAgent({
-      host: process.env.NODE_ENV === 'production' 
-        ? 'https://ic0.app' 
-        : 'http://127.0.0.1:4943',
-      fetch: fetch // 明示的にfetchを指定
-    });
+    // this.agent = new HttpAgent({
+    //   host: process.env.NODE_ENV === 'production' 
+    //     ? 'https://ic0.app' 
+    //     : 'http://127.0.0.1:4943',
+    //   fetch: fetch // 明示的にfetchを指定
+    // });
 
-    // ローカル開発時はフェッチルートの証明をスキップ
-    if (process.env.NODE_ENV !== "production") {
-      this.agent.fetchRootKey().catch(err => {
-        console.warn("Unable to fetch root key. Check to ensure that your local replica is running");
-        console.error(err);
-      });
-    }
+    // // ローカル開発時はフェッチルートの証明をスキップ
+    // if (process.env.NODE_ENV !== "production") {
+    //   this.agent.fetchRootKey().catch(err => {
+    //     console.warn("Unable to fetch root key. Check to ensure that your local replica is running");
+    //     console.error(err);
+    //   });
+    // }
 
-    this.actor = Actor.createActor(idlFactory, {
-      agent: this.agent,
-      canisterId: 'dgic5-vaaaa-aaaaa-qafta-cai',
-    });
+    this.actor = open_vote_backend
   }
 
   async createPoll(poll: CreatePoll): Promise<string> {

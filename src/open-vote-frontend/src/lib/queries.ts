@@ -17,7 +17,7 @@ export const queries = {
     queryFn: () => ic.getPolls(),
     retry: 1,
     staleTime: 30000, // 30秒
-    select: (data: Poll[]) => data.filter(poll => poll.isActive),
+    //select: (data: Poll[]) => data.filter(poll => poll.isActive),
   } as UseQueryOptions<Poll[]>,
 
   completedPolls: {

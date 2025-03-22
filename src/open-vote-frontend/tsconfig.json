@@ -19,7 +19,8 @@
     "baseUrl": ".",
     "paths": {
       "@shared/schema": ["../shared/schema.ts"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "declarations/*": ["../declarations/*"]
     }
   },
   "include": ["src"]
