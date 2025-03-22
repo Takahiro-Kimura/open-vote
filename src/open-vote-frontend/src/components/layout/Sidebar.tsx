@@ -5,7 +5,8 @@ import { open_vote_backend } from "declarations/open-vote-backend";
 import { Button } from '@/components/ui/button';
 import { PlusCircle, BarChart2, User, Home, ClockIcon } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 export function Sidebar() {
   const [location] = useLocation();
@@ -76,12 +77,20 @@ export function Sidebar() {
             ログアウト
           </Button>
           <div className="absolute bottom-16 left-4 flex flex-col">
-            <div className="flex items-center space-x-2">
-              <Avatar>
-                <AvatarFallback>{principal?.substring(0, 2)}</AvatarFallback>
-              </Avatar>
-              <p className="text-sm font-medium leading-none">{principal}</p>
-            </div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex items-center space-x-2">
+                    <Avatar>
+                      <AvatarFallback>{principal?.substring(0, 2)}</AvatarFallback>
+                    </Avatar>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-sm font-medium leading-none">{principal}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </>
       ) : (
