@@ -9,11 +9,13 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ic } from "@/lib/ic";
+import { useAuth } from "@/lib/auth";
 
 export default function Poll() {
   const { id: pollId } = useParams();
   const { toast } = useToast();
   const [selectedOption, setSelectedOption] = useState<string>();
+  const { isAuthenticated, login } = useAuth();
   const queryClient = useQueryClient();
 
   const { data: poll, isLoading } = useQuery(queries.poll(pollId!));
@@ -75,13 +77,23 @@ export default function Poll() {
                 </div>
               ))}
             </RadioGroup>
-            <Button
-              type="submit"
-              className="mt-4"
-              disabled={!selectedOption || voteMutation.isPending}
-            >
-              {voteMutation.isPending ? "Submitting..." : "Submit Vote"}
-            </Button>
+            {isAuthenticated ? (
+              <Button
+                type="submit"
+                className="mt-4"
+                disabled={!selectedOption || voteMutation.isPending}
+              >
+                {voteMutation.isPending ? "Submitting..." : "Submit Vote"}
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                className="mt-4"
+                onClick={() => login()}
+              >
+                Login to Vote
+              </Button>
+            )}
           </form>
         </div>
 
