@@ -70,10 +70,7 @@ export function Sidebar() {
       {isAuthenticated ? (
         <>
           <Button
-            variant="ghost"
-            className={`w-full justify-start mt-2 ${
-              location === '/logout' ? 'bg-sidebar-accent text-sidebar-accent-foreground' : 'hover:bg-sidebar-accent/50'
-            }`}
+            className="w-full mt-2"
             onClick={logout}
           >
             ログアウト
@@ -89,10 +86,7 @@ export function Sidebar() {
         </>
       ) : (
         <Button
-          variant="ghost"
-          className={`w-full justify-start mt-2 ${
-            location === '/login' ? 'bg-sidebar-accent text-sidebar-accent-foreground' : 'hover:bg-sidebar-accent/50'
-          }`}
+          className="w-full mt-2"
           onClick={login}
         >
           ログイン
