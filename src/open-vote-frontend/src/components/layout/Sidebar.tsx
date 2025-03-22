@@ -13,7 +13,7 @@ export function Sidebar() {
   const { isAuthenticated, login, logout, principal } = useAuth();
 
   return (
-    <div className="flex flex-col h-screen w-64 bg-sidebar border-r border-sidebar-border p-4 justify-between">
+    <div className="fixed flex flex-col h-screen w-64 bg-sidebar border-r border-sidebar-border p-4 justify-between">
       <div className="flex items-center gap-2 mb-8">
         <BarChart2 className="w-8 h-8 text-primary" />
         <h1 className="text-2xl font-bold">OpenVote</h1>
