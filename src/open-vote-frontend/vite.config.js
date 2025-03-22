@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import environment from 'vite-plugin-environment';
 import dotenv from 'dotenv';
+import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
 
 dotenv.config({ path: '../../.env' });
 
@@ -29,6 +30,7 @@ export default defineConfig({
     react(),
     environment("all", { prefix: "CANISTER_" }),
     environment("all", { prefix: "DFX_" }),
+    themePlugin()
   ],
   resolve: {
     alias: [
