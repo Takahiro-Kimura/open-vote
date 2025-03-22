@@ -18,9 +18,9 @@ export function PollCard({ poll }: PollCardProps) {
       <CardHeader>
         <h3 className="text-xl font-bold">{poll.question}</h3>
         <p className="text-sm text-muted-foreground">
-          {poll.endTime
+          {poll.endTime && Number(poll.endTime.toString()) > new Date().getTime()
             ? `${formatDistanceToNow(new Date(Number(poll.endTime.toString())))} left`
-            : '無期限'}
+            : 'Voting ended'}
         </p>
         <p className="text-sm text-muted-foreground">Total votes: {totalVotes}</p>
       </CardHeader>
