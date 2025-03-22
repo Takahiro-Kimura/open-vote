@@ -282,3 +282,9 @@ fn get_user_votes(principal: String) -> Vec<Vote> {
         votes.borrow().iter().filter(|vote| vote.voter == principal).cloned().collect()
     })
 }
+
+
+#[ic_cdk::query]
+fn whoami() -> String {
+    ic_cdk::caller().to_string()
+}

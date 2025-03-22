@@ -1,48 +1,52 @@
 type Poll = record {
-    id: text;
-    question: text;
-    options: vec PollOption;
-    end_time: opt nat64;
-    creator: text;
-  };
+  id : text;
+  question : text;
+  options : vec PollOption;
+  end_time : opt nat64;
+  creator : text;
+};
 
 type PollOption = record {
-    text: text;
-    votes: nat64;
-  };
+  text : text;
+  votes : nat64;
+};
 
 type Vote = record {
-    poll_id: text;
-    option: text;
-    voter: text;
-  };
+  poll_id : text;
+  option : text;
+  voter : text;
+};
 
 type CreatePollRequest = record {
-    question: text;
-    options: vec text;
-    end_time: opt nat64;
-  };
+  question : text;
+  options : vec text;
+  end_time : opt nat64;
+};
 
 type VoteRequest = record {
-    option: text;
-  };
+  option : text;
+};
 
 type PollResult = record {
-    votes : nat64;
-    percentage : float64;
-  };
+  votes : nat64;
+  percentage : float64;
+};
 
-type PollResults = record { results: vec record {option_text: text; PollResult} };
-type ResultPollResults = variant { Ok: PollResults; Err: text };
+type PollResults = record {
+  results : vec record { option_text : text; PollResult };
+};
+type ResultPollResults = variant { Ok : PollResults; Err : text };
 
-service: {
-  "create_poll": (CreatePollRequest) -> (text);
-  "get_poll": (text) -> (opt Poll);
-  "get_poll_results": (text) -> (ResultPollResults) query;
-  "get_polls": () -> (vec Poll) query;
-  "get_principal": () -> (text) query;
+service : {
+  "create_poll" : (CreatePollRequest) -> (text);
+  "get_poll" : (text) -> (opt Poll);
+  "get_poll_results" : (text) -> (ResultPollResults) query;
+  "get_polls" : () -> (vec Poll) query;
+  "get_principal" : () -> (text) query;
   "get_user_polls" : (text) -> (vec Poll) query;
   "get_user_votes" : (text) -> (vec Vote) query;
-  "greet": (text) -> (text) query;
-  "vote": (text, VoteRequest) -> (text, text);
+  "greet" : (text) -> (text) query;
+  "vote" : (text, VoteRequest) -> (text, text);
+  "whoami" : () -> (text) query;
+
 };
