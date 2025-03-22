@@ -29,7 +29,7 @@ class ICClient {
     this.actor = open_vote_backend
   }
 
-  async createPoll(poll: CreatePoll): Promise<string> {
+  async createPoll(poll: any): Promise<string> {  // todo: anyをCreatePollにする
     try {
       console.log('Creating poll with data:', poll);
       const result = await this.actor.create_poll(poll);

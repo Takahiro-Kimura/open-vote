@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Poll } from "@shared/schema";
-import { PollSchema } from "@shared/schema";
+import { CreatePollSchema } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -33,10 +33,10 @@ export function CreatePollForm() {
   const queryClient = useQueryClient();
 
   const form = useForm<Poll>({
-    resolver: zodResolver(PollSchema),
+    resolver: zodResolver(CreatePollSchema),
     defaultValues: {
       question: "",
-      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // デフォルトで1週間後
+      endTime: 4102412400,
       options: [
         { text: "", votes: 0 },
         { text: "", votes: 0 },
@@ -51,13 +51,12 @@ export function CreatePollForm() {
 
   const createPollMutation = useMutation({
     mutationFn: async (data: Poll) => {
+      console.log(99312, data.options);
       // データを整形
       const formattedData = {
         question: data.question,
-        endDate: data.endDate,
-        options: data.options.map((option) => ({
-          text: option.text,
-        })),
+        end_time: [data.endTime],
+        options: data.options.map((option) => option.text),
       };
       console.log("Submitting poll data:", formattedData);
       return ic.createPoll(formattedData);
@@ -81,13 +80,22 @@ export function CreatePollForm() {
     },
   });
 
+  const onSubmit = form.handleSubmit(
+    (data) => {
+      createPollMutation.mutate(data);
+    },
+    (errors) => {
+      console.error("Validation Errors:", errors);
+    }
+  );
+
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((data) => {
-          console.log(99999999);
-          createPollMutation.mutate(data);
-        })}
+        onSubmit={(e) => {
+          e.preventDefault(); // デフォルト動作を止める
+          onSubmit(e);
+        }}
         className="space-y-6"
       >
         <FormField
@@ -106,7 +114,7 @@ export function CreatePollForm() {
 
         <FormField
           control={form.control}
-          name="endDate"
+          name="endTime"
           render={({ field }) => (
             <FormItem>
               <FormLabel>終了日時</FormLabel>

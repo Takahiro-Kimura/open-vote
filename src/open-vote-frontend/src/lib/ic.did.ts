@@ -1,42 +1,54 @@
-import { IDL } from '@dfinity/candid';
+import { IDL } from "@dfinity/candid";
 
-const VoteOption = IDL.Record({
-  'id': IDL.Text,
-  'text': IDL.Text,
-  'count': IDL.Nat,
+const PollOption = IDL.Record({
+  text: IDL.Text,
+  votes: IDL.Nat64,
 });
 
 const Poll = IDL.Record({
-  'id': IDL.Text,
-  'title': IDL.Text,
-  'description': IDL.Text,
-  'options': IDL.Vec(VoteOption),
-  'createdBy': IDL.Text,
-  'createdAt': IDL.Text,
-  'endDate': IDL.Text,
-  'isActive': IDL.Bool,
+  id: IDL.Text,
+  question: IDL.Text,
+  options: IDL.Vec(PollOption),
+  end_time: IDL.Opt(IDL.Nat64),
+  creator: IDL.Text,
 });
 
-const CreatePoll = IDL.Record({
-  'title': IDL.Text,
-  'description': IDL.Text,
-  'options': IDL.Vec(IDL.Record({ 'text': IDL.Text })),
-  'endDate': IDL.Text,
-  'isActive': IDL.Bool,
+const CreatePollRequest = IDL.Record({
+  question: IDL.Text,
+  options: IDL.Vec(IDL.Text),
+  end_time: IDL.Opt(IDL.Nat64),
 });
 
 const VoteRequest = IDL.Record({
-  'pollId': IDL.Text,
-  'optionId': IDL.Text,
+  option: IDL.Text,
+});
+
+const PollResult = IDL.Record({
+  votes: IDL.Nat64,
+  percentage: IDL.Float64,
+});
+
+const PollResults = IDL.Record({
+  results: IDL.Vec(IDL.Record({ option_text: IDL.Text, PollResult })),
+});
+
+const ResultPollResults = IDL.Variant({ Ok: PollResults, Err: IDL.Text });
+
+const Vote = IDL.Record({
+    poll_id: IDL.Text,
+    option: IDL.Text,
+    voter: IDL.Text,
 });
 
 export const idlFactory = ({ IDL }: { IDL: any }) => {
   return IDL.Service({
-    'create_poll': IDL.Func([CreatePoll], [IDL.Text], ['update']),
-    'get_poll': IDL.Func([IDL.Text], [IDL.Opt(Poll)], ['query']),
-    'get_polls': IDL.Func([], [IDL.Vec(Poll)], ['query']),
-    'get_user_polls': IDL.Func([IDL.Principal], [IDL.Vec(Poll)], ['query']),
-    'vote': IDL.Func([VoteRequest], [], ['update']),
-    'get_principal': IDL.Func([], [IDL.Principal], ['query']),
+    create_poll: IDL.Func([CreatePollRequest], [IDL.Text], ["update"]),
+    get_poll: IDL.Func([IDL.Text], [IDL.Opt(Poll)], ["query"]),
+    get_poll_results: IDL.Func([IDL.Text], [ResultPollResults], ["query"]),
+    get_polls: IDL.Func([], [IDL.Vec(Poll)], ["query"]),
+    get_principal: IDL.Func([], [IDL.Text], ["query"]),
+    get_user_polls: IDL.Func([IDL.Text], [IDL.Vec(Poll)], ["query"]),
+    get_user_votes: IDL.Func([IDL.Text], [IDL.Vec(Vote)], ["query"]),
+    vote: IDL.Func([IDL.Text, VoteRequest], [[IDL.Text, IDL.Text]], ["update"]),
   });
 };

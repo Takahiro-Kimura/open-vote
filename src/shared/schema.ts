@@ -14,7 +14,7 @@ export const PollSchema = z.object({
   question: z.string().min(1, {
     message: "タイトルは1文字以上である必要があります。",
   }),
-  endDate: z.string().optional(),
+  endTime: z.number().optional(),
   options: z.array(PollOptionSchema).min(2, {
     message: "選択肢は2つ以上必要です。",
   }),
@@ -23,7 +23,11 @@ export const PollSchema = z.object({
 
 export type Poll = z.infer<typeof PollSchema>;
 
-export const CreatePollSchema = PollSchema.omit({ id: true, creator: true, options: true }).extend({
+export const CreatePollSchema = PollSchema.omit({
+  id: true,
+  creator: true,
+  options: true,
+}).extend({
   options: z.array(PollOptionSchema.omit({ votes: true })).min(2, {
     message: "選択肢は2つ以上必要です。",
   }),
