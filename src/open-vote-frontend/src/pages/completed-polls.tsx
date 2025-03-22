@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function CompletedPolls() {
   const { data: polls, isLoading, error } = useQuery({
     ...queries.completedPolls,
-    select: (data) => data.filter(poll => !poll.isActive)
+    select: (data) => data
   });
 
   if (error) {

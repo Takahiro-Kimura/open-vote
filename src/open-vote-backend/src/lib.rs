@@ -9,14 +9,19 @@ use std::cell::RefCell;
 type PollId = String;
 type Principal = String;
 
+#[derive(CandidType, Serialize, Deserialize, Clone, PartialEq)]
+struct PollOption {
+    text: String,
+    votes: u64,
+}
+
 #[derive(CandidType, Serialize, Deserialize, Clone)]
 struct Poll {
     id: PollId,
     question: String,
-    options: Vec<String>,
+    options: Vec<PollOption>,
     end_time: Option<u64>,
     creator: Principal,
-    total_votes: u64,
 }
 
 #[derive(CandidType, Serialize, Deserialize, Clone)]
@@ -71,10 +76,9 @@ fn create_poll(req: CreatePollRequest) -> Result<PollId, String> {
     let poll = Poll {
         id: poll_id.clone(),
         question: req.question,
-        options: req.options,
+        options: req.options.into_iter().map(|option| PollOption { text: option, votes: 0 }).collect(),
         end_time: req.end_time,
-        creator,
-        total_votes: 0,
+        creator: creator,
     };
 
     // 投票をグローバル変数に追加
@@ -141,7 +145,7 @@ fn vote(poll_id: String, req: VoteRequest) -> Result<String, String> {
 
         match poll {
             Some(poll) => {
-                if poll.options.contains(&req.option) {
+                if poll.options.iter().any(|poll_option| poll_option.text == req.option) {
                     // Check if user has already voted
                     let already_voted = VOTES.with(|votes| {
                         votes.borrow().iter().any(|vote| vote.poll_id == poll_id && vote.voter == voter)
@@ -149,6 +153,19 @@ fn vote(poll_id: String, req: VoteRequest) -> Result<String, String> {
 
                     if already_voted {
                         return Err("You have already voted in this poll".to_string());
+                    }
+
+                    let mut found = false;
+                    for poll_option in &mut poll.options {
+                        if poll_option.text == req.option {
+                            poll_option.votes += 1;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if !found {
+                        return Err("Invalid option".to_string());
                     }
 
                     // Create vote
@@ -163,7 +180,6 @@ fn vote(poll_id: String, req: VoteRequest) -> Result<String, String> {
                         votes.borrow_mut().push(vote);
                     });
 
-                    poll.total_votes += 1;
                     return Ok("Vote cast successfully".to_string());
                 } else {
                     return Err("Invalid option".to_string());
@@ -201,21 +217,21 @@ fn get_poll_results(poll_id: String) -> Result<(HashMap<String, PollResult>, u64
 
         match poll {
             Some(poll) => {
-                let total_votes = poll.total_votes;
+                let mut total_votes: u64 = 0;
+                for option in &poll.options {
+                    total_votes += option.votes;
+                }
+
                 let mut results: HashMap<String, PollResult> = HashMap::new();
 
                 for option in &poll.options {
-                    let votes = VOTES.with(|votes| {
-                        votes.borrow().iter().filter(|vote| vote.poll_id == poll_id && vote.option == *option).count() as u64
-                    });
-
                     let percentage = if total_votes > 0 {
-                        (votes as f64 / total_votes as f64) * 100.0
+                        (option.votes as f64 / total_votes as f64) * 100.0
                     } else {
                         0.0
                     };
 
-                    results.insert(option.clone(), PollResult { votes, percentage });
+                    results.insert(option.text.clone(), PollResult { votes: option.votes, percentage });
                 }
 
                 Ok((results, total_votes))

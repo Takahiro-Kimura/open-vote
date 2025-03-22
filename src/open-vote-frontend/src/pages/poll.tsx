@@ -51,8 +51,8 @@ export default function Poll() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-4xl font-bold mb-4">{poll.title}</h1>
-      <p className="text-lg text-muted-foreground mb-8">{poll.description}</p>
+      <h1 className="text-4xl font-bold mb-4">{poll.question}</h1>
+      
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>

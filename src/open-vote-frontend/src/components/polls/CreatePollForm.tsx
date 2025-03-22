@@ -1,20 +1,31 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, useFieldArray } from 'react-hook-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Poll } from '@shared/schema';
-import { PollSchema } from '@shared/schema';
-import { Button } from '@/components/ui/button';
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { format } from 'date-fns';
-import { CalendarIcon, Plus, Trash2 } from 'lucide-react';
-import { ic } from '@/lib/ic';
-import { useToast } from '@/hooks/use-toast';
-import { useLocation } from 'wouter';
-import { QueryKeys } from '@/lib/queries';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, useFieldArray } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { Poll } from "@shared/schema";
+import { PollSchema } from "@shared/schema";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import { CalendarIcon, Plus, Trash2 } from "lucide-react";
+import { ic } from "@/lib/ic";
+import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
+import { QueryKeys } from "@/lib/queries";
 
 export function CreatePollForm() {
   const { toast } = useToast();
@@ -24,75 +35,69 @@ export function CreatePollForm() {
   const form = useForm<Poll>({
     resolver: zodResolver(PollSchema),
     defaultValues: {
-      title: '',
-      description: '',
+      question: "",
       endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // デフォルトで1週間後
-      options: [{ id: '', text: '', count: 0 }, { id: '', text: '', count: 0 }], // デフォルトで2つの選択肢
-      isActive: true
-    }
+      options: [
+        { text: "", votes: 0 },
+        { text: "", votes: 0 },
+      ], // デフォルトで2つの選択肢
+    },
   });
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "options"
+    name: "options",
   });
 
   const createPollMutation = useMutation({
     mutationFn: async (data: Poll) => {
       // データを整形
       const formattedData = {
-        ...data,
-        options: data.options.map(option => ({
+        question: data.question,
+        endDate: data.endDate,
+        options: data.options.map((option) => ({
           text: option.text,
         })),
       };
-      console.log('Submitting poll data:', formattedData);
+      console.log("Submitting poll data:", formattedData);
       return ic.createPoll(formattedData);
     },
     onSuccess: (pollId) => {
       toast({
-        title: '成功',
-        description: '投票が作成されました！'
+        title: "成功",
+        description: "投票が作成されました！",
       });
       // キャッシュを更新して画面遷移
       queryClient.invalidateQueries({ queryKey: [QueryKeys.polls] });
       setLocation(`/poll/${pollId}`);
     },
     onError: (error) => {
-      console.error('Poll creation error:', error);
+      console.error("Poll creation error:", error);
       toast({
-        title: 'エラー',
-        description: '投票の作成に失敗しました。もう一度お試しください。',
-        variant: 'destructive'
+        title: "エラー",
+        description: "投票の作成に失敗しました。もう一度お試しください。",
+        variant: "destructive",
       });
-    }
+    },
   });
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((data) => createPollMutation.mutate(data))} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit((data) => {
+          console.log(99999999);
+          createPollMutation.mutate(data);
+        })}
+        className="space-y-6"
+      >
         <FormField
           control={form.control}
-          name="title"
+          name="question"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>タイトル</FormLabel>
+              <FormLabel>質問</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="投票のタイトルを入力" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>説明</FormLabel>
-              <FormControl>
-                <Textarea {...field} placeholder="投票の説明を入力" />
+                <Input {...field} placeholder="投票の質問を入力" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -108,9 +113,18 @@ export function CreatePollForm() {
               <FormControl>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className={`w-full justify-start text-left font-normal ${!field.value && "text-muted-foreground"}`}>
+                    <Button
+                      variant="outline"
+                      className={`w-full justify-start text-left font-normal ${
+                        !field.value && "text-muted-foreground"
+                      }`}
+                    >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {field.value ? format(new Date(field.value), 'PPP') : <span>終了日を選択</span>}
+                      {field.value ? (
+                        format(new Date(field.value), "PPP")
+                      ) : (
+                        <span>終了日を選択</span>
+                      )}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -135,7 +149,7 @@ export function CreatePollForm() {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => append({ id: '', text: '', count: 0 })}
+              onClick={() => append({ text: "", votes: 0 })}
             >
               <Plus className="h-4 w-4 mr-2" />
               選択肢を追加
@@ -171,7 +185,7 @@ export function CreatePollForm() {
         </div>
 
         <Button type="submit" disabled={createPollMutation.isPending}>
-          {createPollMutation.isPending ? '作成中...' : '投票を作成'}
+          {createPollMutation.isPending ? "作成中..." : "投票を作成"}
         </Button>
       </form>
     </Form>

@@ -1,10 +1,14 @@
 type Poll = record {
     id: text;
     question: text;
-    options: vec text;
+    options: vec PollOption;
     end_time: opt nat64;
     creator: text;
-    total_votes: nat64;
+  };
+
+type PollOption = record {
+    text: text;
+    votes: nat64;
   };
 
 type Vote = record {
@@ -23,18 +27,16 @@ type VoteRequest = record {
     option: text;
   };
 
-type Results = vec record {option_text: text; PollResult};
-
 type PollResult = record {
     votes : nat64;
     percentage : float64;
   };
 
-type PollResults = record { results: Results; total_votes: nat64 };
+type PollResults = record { results: vec record {option_text: text; PollResult} };
 type ResultPollResults = variant { Ok: PollResults; Err: text };
 
 service: {
-  "create_poll": (CreatePollRequest) -> (text, text);
+  "create_poll": (CreatePollRequest) -> (text);
   "get_poll": (text) -> (opt Poll);
   "get_poll_results": (text) -> (ResultPollResults) query;
   "get_polls": () -> (vec Poll) query;

@@ -10,7 +10,7 @@ const COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD'];
 export function PollResults({ poll }: PollResultsProps) {
   const data = poll.options.map((option) => ({
     name: option.text,
-    value: option.count
+    value: option.votes
   }));
 
   return (

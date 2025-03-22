@@ -14,19 +14,19 @@ export function PollCard({ poll }: PollCardProps) {
   return (
     <Card className="w-full hover:shadow-lg transition-shadow">
       <CardHeader>
-        <h3 className="text-xl font-bold">{poll.title}</h3>
+        <h3 className="text-xl font-bold">{poll.question}</h3>
         <p className="text-sm text-muted-foreground">
-          Created {formatDistanceToNow(new Date(poll.createdAt))} ago
+          
         </p>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground mb-4">{poll.description}</p>
+        
         <div className="flex flex-col gap-2">
           {poll.options.map((option) => (
-            <div key={option.id} className="flex justify-between items-center">
+            <div key={option.text} className="flex justify-between items-center">
               <span>{option.text}</span>
               <span className="text-sm text-muted-foreground">
-                {option.count} votes
+                {option.votes} votes
               </span>
             </div>
           ))}
