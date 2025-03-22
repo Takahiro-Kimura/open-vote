@@ -36,7 +36,7 @@ export function CreatePollForm() {
     resolver: zodResolver(CreatePollSchema),
     defaultValues: {
       question: "",
-      endTime: 4102412400,
+      endTime: BigInt(4102412400),
       options: [
         { text: "", votes: 0 },
         { text: "", votes: 0 },
@@ -59,7 +59,12 @@ export function CreatePollForm() {
         options: data.options.map((option) => option.text),
       };
       console.log("Submitting poll data:", formattedData);
-      return ic.createPoll(formattedData);
+      try {
+        return await ic.createPoll(formattedData);
+      } catch (e) {
+        console.log(e);
+        throw e;
+      }
     },
     onSuccess: (pollId) => {
       toast({
@@ -129,7 +134,7 @@ export function CreatePollForm() {
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {field.value ? (
-                        format(new Date(field.value), "PPP")
+                        format(new Date(Number(field.value)), "PPP")
                       ) : (
                         <span>終了日を選択</span>
                       )}
@@ -138,8 +143,12 @@ export function CreatePollForm() {
                   <PopoverContent className="w-auto p-0">
                     <Calendar
                       mode="single"
-                      selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) => field.onChange(date?.toISOString())}
+                      selected={field.value ? new Date(Number(field.value)) : undefined}
+                      onSelect={(date) => {
+                        if (date) {
+                          field.onChange(BigInt(date.getTime()));
+                        }
+                      }}
                       initialFocus
                     />
                   </PopoverContent>

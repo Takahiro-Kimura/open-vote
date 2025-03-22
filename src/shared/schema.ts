@@ -14,7 +14,7 @@ export const PollSchema = z.object({
   question: z.string().min(1, {
     message: "タイトルは1文字以上である必要があります。",
   }),
-  endTime: z.number().optional(),
+  endTime: z.bigint().optional(),
   options: z.array(PollOptionSchema).min(2, {
     message: "選択肢は2つ以上必要です。",
   }),
