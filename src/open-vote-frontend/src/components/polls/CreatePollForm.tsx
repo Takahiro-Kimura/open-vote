@@ -14,15 +14,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format } from "date-fns";
-import { CalendarIcon, Plus, Trash2, X } from "lucide-react";
+import { Plus, Trash2, X } from "lucide-react";
 import { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import { ic } from "@/lib/ic";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
@@ -129,39 +131,72 @@ export function CreatePollForm() {
             return (
               <FormItem>
                 <FormLabel>終了日時</FormLabel>
-                <FormControl>
-                  <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={`w-full justify-start text-left font-normal bg-white ${
-                          !field.value && "text-muted-foreground"
-                        }`}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {field.value ? (
-                          format(new Date(Number(field.value)), "PPP")
-                        ) : (
-                          <span>終了日を選択</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={field.value ? new Date(Number(field.value)) : undefined}
-onSelect={(date) => {
-  if (date) {
-    date.setHours(23, 59, 59);
-    field.onChange(BigInt(date.getTime()));
-    setOpen(false);
-  }
-}}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </FormControl>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const tomorrow = new Date();
+                      tomorrow.setDate(tomorrow.getDate() + 1);
+                      tomorrow.setHours(23, 59, 59);
+                      field.onChange(BigInt(tomorrow.getTime()));
+                    }}
+                  >
+                    Tomorrow
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const nextWeek = new Date();
+                      nextWeek.setDate(nextWeek.getDate() + 7);
+                      nextWeek.setHours(23, 59, 59);
+                      field.onChange(BigInt(nextWeek.getTime()));
+                    }}
+                  >
+                    1 Week
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const nextMonth = new Date();
+                      nextMonth.setMonth(nextMonth.getMonth() + 1);
+                      nextMonth.setHours(23, 59, 59);
+                      field.onChange(BigInt(nextMonth.getTime()));
+                    }}
+                  >
+                    1 Month
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const nextYear = new Date();
+                      nextYear.setFullYear(nextYear.getFullYear() + 1);
+                      nextYear.setHours(23, 59, 59);
+                      field.onChange(BigInt(nextYear.getTime()));
+                    }}
+                  >
+                    1 Year
+                  </Button>
+                </div>
+                <DatePicker
+                  selected={field.value ? new Date(Number(field.value)) : null}
+                  onChange={(date) => {
+                    if (date) {
+                      field.onChange(BigInt(date.getTime()));
+                    }
+                  }}
+                  showTimeSelect
+                  dateFormat="yyyy/MM/dd HH:mm"
+                  timeFormat="HH:mm"
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                />
                 <FormMessage />
               </FormItem>
             );
