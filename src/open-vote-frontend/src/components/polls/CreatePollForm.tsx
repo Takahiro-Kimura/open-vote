@@ -150,12 +150,13 @@ export function CreatePollForm() {
                       <Calendar
                         mode="single"
                         selected={field.value ? new Date(Number(field.value)) : undefined}
-                        onSelect={(date) => {
-                          if (date) {
-                            field.onChange(BigInt(date.getTime()));
-                            setOpen(false);
-                          }
-                        }}
+onSelect={(date) => {
+  if (date) {
+    date.setHours(23, 59, 59);
+    field.onChange(BigInt(date.getTime()));
+    setOpen(false);
+  }
+}}
                         initialFocus
                       />
                     </PopoverContent>
