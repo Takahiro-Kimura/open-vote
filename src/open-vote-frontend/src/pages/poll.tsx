@@ -42,6 +42,7 @@ export default function Poll() {
       // Invalidate relevant queries
       queryClient.invalidateQueries({ queryKey: [QueryKeys.poll(pollId!)] });
       queryClient.invalidateQueries({ queryKey: [QueryKeys.polls] });
+      window.location.reload();
     },
     onError: () => {
       toast({
