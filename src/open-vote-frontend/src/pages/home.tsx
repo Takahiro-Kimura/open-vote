@@ -37,7 +37,7 @@ export default function Home() {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-4xl font-bold">Active Polls</h1>
         <div className="flex items-center">
-          <label htmlFor="sort" className="mr-2">ソート:</label>
+          <label htmlFor="sort" className="mr-2">Sort:</label>
           <div className="space-x-2">
             <button
               className={`border rounded px-2 py-1 ${
@@ -55,7 +55,7 @@ export default function Home() {
                 }
               }}
             >
-              投票終了日
+              End Date
             </button>
             <button
               className={`border rounded px-2 py-1 ${
@@ -74,7 +74,7 @@ export default function Home() {
                 }
               }}
             >
-              投票数
+              Total Votes
             </button>
           </div>
         </div>
