@@ -36,9 +36,10 @@ type PollResults = record {
   results : vec record { option_text : text; PollResult };
 };
 type ResultPollResults = variant { Ok : PollResults; Err : text };
+type Result = variant { Ok : text; Err : text };
 
 service : {
-  "create_poll" : (CreatePollRequest) -> (text);
+  "create_poll" : (CreatePollRequest) -> (Result);
   "get_poll" : (text) -> (opt Poll);
   "get_poll_results" : (text) -> (ResultPollResults) query;
   "get_polls" : () -> (vec Poll) query;
