@@ -75,22 +75,6 @@ export function Header() {
           >
             Sign Out
           </Button>
-          <div className="flex items-center space-x-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center space-x-2">
-                    <Avatar>
-                      <AvatarFallback>{principal?.substring(0, 2)}</AvatarFallback>
-                    </Avatar>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="text-sm font-medium leading-none">{principal}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
         </>
       ) : (
         <Button
