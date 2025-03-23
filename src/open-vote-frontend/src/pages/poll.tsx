@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from "@/components/ui/skeleton";
 import { ic } from "@/lib/ic";
 import { useAuth } from "@/lib/auth";
@@ -58,7 +59,11 @@ export default function Poll() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-4xl font-bold mb-4">{poll.question}</h1>
-      
+      <p className="text-sm text-muted-foreground">
+        {poll.endTime && Number(poll.endTime.toString()) > new Date().getTime()
+          ? `${formatDistanceToNow(new Date(Number(poll.endTime.toString())))} left`
+          : 'Voting ended'}
+      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
