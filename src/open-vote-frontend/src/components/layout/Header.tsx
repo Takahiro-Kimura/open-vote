@@ -16,7 +16,7 @@ export function Header() {
     <div className="flex items-center justify-between h-16 bg-header border-b border-header-border p-4">
       <div className="flex items-center gap-2">
         <BarChart2 className="w-8 h-8 text-primary" />
-        <h1 className="text-2xl font-bold">OpenVote</h1>
+        <h1 className="text-2xl font-bold hidden md:inline">OpenVote</h1>
       </div>
 
       <nav className="flex items-center gap-4">
@@ -27,8 +27,8 @@ export function Header() {
               location === '/' ? 'bg-header-accent text-header-accent-foreground' : 'hover:bg-header-accent/50'
             }`}
           >
-            <Home className="w-5 h-5 mr-2" />
-            Active Polls
+            <Home className="w-5 h-5 mr-2 md:mr-0" />
+            <span className="hidden md:inline">Active Polls</span>
           </Button>
         </Link>
 
@@ -39,8 +39,8 @@ export function Header() {
               location === '/completed-polls' ? 'bg-header-accent text-header-accent-foreground' : 'hover:bg-header-accent/50'
             }`}
           >
-            <ClockIcon className="w-5 h-5 mr-2" />
-            Completed Polls
+            <ClockIcon className="w-5 h-5 mr-2 md:mr-0" />
+            <span className="hidden md:inline">Completed Polls</span>
           </Button>
         </Link>
 
@@ -51,8 +51,8 @@ export function Header() {
               location === '/create-poll' ? 'bg-header-accent text-header-accent-foreground' : 'hover:bg-header-accent/50'
             }`}
           >
-            <PlusCircle className="w-5 h-5 mr-2" />
-            Create Poll
+            <PlusCircle className="w-5 h-5 mr-2 md:mr-0" />
+            <span className="hidden md:inline">Create Poll</span>
           </Button>
         </Link>
 
@@ -63,8 +63,8 @@ export function Header() {
               location === '/my-polls' ? 'bg-header-accent text-header-accent-foreground' : 'hover:bg-header-accent/50'
             }`}
           >
-            <User className="w-5 h-5 mr-2" />
-            My Polls
+            <User className="w-5 h-5 mr-2 md:mr-0" />
+            <span className="hidden md:inline">My Polls</span>
           </Button>
         </Link>
       </nav>

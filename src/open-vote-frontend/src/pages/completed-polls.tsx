@@ -65,9 +65,9 @@ export default function CompletedPolls() {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2">
         <h1 className="text-4xl font-bold">Completed Polls</h1>
-        <div className="flex items-center">
+        <div className="flex items-center mt-4 md:mt-0">
           <label htmlFor="sort" className="mr-2">
             Sort:
           </label>
@@ -91,7 +91,7 @@ export default function CompletedPolls() {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
         {sortedPolls?.map((poll) => (
           <PollCard key={poll.id} poll={poll} />
         ))}
