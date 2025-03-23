@@ -63,7 +63,7 @@ class ICClient {
       console.log("Getting poll:", id);
       const result = await this.actor.get_poll(id);
       console.log("Get poll result:", result);
-      return result.length > 0 ? result[0] : null;
+      return result.length > 0 ? {...result[0], endTime: result[0].end_time} : null;
     } catch (error) {
       console.error("Failed to get poll:", error);
       return null;
@@ -103,7 +103,6 @@ class ICClient {
     try {
       console.log("Submitting vote:", request);
       return await this.actor.vote(request.pollId, { option: request.option });
-      console.log("Vote submitted successfully");
     } catch (error) {
       console.error("Failed to vote:", error);
       throw error;
