@@ -145,6 +145,14 @@ fn vote(poll_id: String, req: VoteRequest) -> Result<String, String> {
 
         match poll {
             Some(poll) => {
+                let now = api::time();
+
+                if let Some(end_time) = poll.end_time {
+                    if now > end_time {
+                        return Err("Voting has ended for this poll".to_string());
+                    }
+                }
+
                 if poll.options.iter().any(|poll_option| poll_option.text == req.option) {
                     // Check if user has already voted
                     let already_voted = VOTES.with(|votes| {
