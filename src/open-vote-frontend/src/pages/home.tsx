@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function Home() {
   const { data: polls, isLoading, error } = useQuery({
     ...queries.polls,
-    //select: (data) => data.filter(poll => poll.isActive)
+    select: (data) => data?.filter(poll => poll.endTime && Number(poll.endTime.toString()) > new Date().getTime())
   });
 
   if (error) {
@@ -22,9 +22,6 @@ export default function Home() {
       </div>
     );
   }
-
-  console.log(111)
-  console.log(123, polls)
 
   return (
     <div className="p-6">
