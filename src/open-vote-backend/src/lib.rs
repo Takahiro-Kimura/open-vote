@@ -145,11 +145,11 @@ fn vote(poll_id: String, req: VoteRequest) -> Result<String, String> {
 
         match poll {
             Some(poll) => {
-                let now = api::time();
+                let now = api::time() / 1_000_000;
 
                 if let Some(end_time) = poll.end_time {
                     if now > end_time {
-                        return Err("Voting has ended for this poll".to_string());
+                        return Err(format!("Voting has ended for this poll at {}", now));
                     }
                 }
 
