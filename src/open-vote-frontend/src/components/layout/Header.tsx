@@ -27,7 +27,7 @@ export function Header() {
               location === '/' ? 'bg-header-accent text-header-accent-foreground' : 'hover:bg-header-accent/50'
             }`}
           >
-            <Home className="w-5 h-5 mr-2 md:mr-0" />
+            <Home className="w-2 h-2 md:mr-0" />
             <span className="hidden md:inline">Active Polls</span>
           </Button>
         </Link>
@@ -39,7 +39,7 @@ export function Header() {
               location === '/completed-polls' ? 'bg-header-accent text-header-accent-foreground' : 'hover:bg-header-accent/50'
             }`}
           >
-            <ClockIcon className="w-5 h-5 mr-2 md:mr-0" />
+            <ClockIcon className="w-2 h-2 md:mr-0" />
             <span className="hidden md:inline">Completed Polls</span>
           </Button>
         </Link>
@@ -51,7 +51,7 @@ export function Header() {
               location === '/create-poll' ? 'bg-header-accent text-header-accent-foreground' : 'hover:bg-header-accent/50'
             }`}
           >
-            <PlusCircle className="w-5 h-5 mr-2 md:mr-0" />
+            <PlusCircle className="w-2 h-2 md:mr-0" />
             <span className="hidden md:inline">Create Poll</span>
           </Button>
         </Link>
@@ -63,7 +63,7 @@ export function Header() {
               location === '/my-polls' ? 'bg-header-accent text-header-accent-foreground' : 'hover:bg-header-accent/50'
             }`}
           >
-            <User className="w-5 h-5 mr-2 md:mr-0" />
+            <User className="w-2 h-2 md:mr-0" />
             <span className="hidden md:inline">My Polls</span>
           </Button>
         </Link>

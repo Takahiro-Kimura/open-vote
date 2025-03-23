@@ -33,9 +33,9 @@ export default function Home() {
   }
 
   return (
-    <>
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
-        <h1 className="text-3xl font-bold mb-2">Active Polls</h1>
+    <div className="p-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2">
+        <h1 className="text-4xl font-bold">Active Polls</h1>
         <div className="flex items-center mt-4 md:mt-0">
           <label htmlFor="sort" className="mr-2">Sort:</label>
           <div className="space-x-2">
@@ -84,6 +84,6 @@ export default function Home() {
           <PollCard key={poll.id} poll={poll} />
         ))}
       </div>
-    </>
+    </div>
   );
 }
