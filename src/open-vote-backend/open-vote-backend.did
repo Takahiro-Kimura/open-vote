@@ -46,8 +46,7 @@ service : {
   "get_principal" : () -> (text) query;
   "get_user_polls" : (text) -> (vec Poll) query;
   "get_user_votes" : (text) -> (vec Vote) query;
-  "greet" : (text) -> (text) query;
-  "vote" : (text, VoteRequest) -> (text, text);
+  "vote" : (text, VoteRequest) -> (Result);
   "whoami" : () -> (text) query;
 
 };
