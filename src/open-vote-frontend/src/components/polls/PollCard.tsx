@@ -20,12 +20,12 @@ export function PollCard({ poll }: PollCardProps) {
         <p className="text-sm text-muted-foreground">
           {poll.endTime && Number(poll.endTime.toString()) > new Date().getTime()
             ? `${formatDistanceToNow(new Date(Number(poll.endTime.toString())))} left`
-            : poll.endTime ? `Voting ended (${new Date(Number(poll.endTime.toString())).toLocaleDateString()})` : `Voting ended`}
+            : poll.endTime ? `Voting ended (${new Date(Number(poll.endTime.toString())).toLocaleString()})` : `Voting ended`}
         </p>
         <p className="text-sm text-muted-foreground">Total votes: {totalVotes}</p>
       </CardHeader>
       <CardContent>
-        
+
         <div className="flex flex-col gap-2">
           {poll.options.map((option) => {
             const percentage = totalVotes > 0 ? ((Number(option.votes) || 0) / totalVotes) * 100 : 0;
