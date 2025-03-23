@@ -67,7 +67,11 @@ export default function Poll() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <h2 className="text-2xl font-semibold mb-4">Cast Your Vote</h2>
+          <h2 className="text-2xl font-semibold mb-4">
+            {poll.endTime && Number(poll.endTime.toString()) > new Date().getTime()
+              ? "Cast Your Vote"
+              : "Options"}
+          </h2>
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -86,23 +90,25 @@ export default function Poll() {
                 </div>
               ))}
             </RadioGroup>
-            {isAuthenticated ? (
-              <Button
-                type="submit"
-                className="mt-4"
-                disabled={!selectedOption || voteMutation.isPending}
-              >
-                {voteMutation.isPending ? "Submitting..." : "Submit Vote"}
-              </Button>
-            ) : (
-              <Button
-                type="button"
-                className="mt-4"
-                onClick={() => login()}
-              >
-                Login to Vote
-              </Button>
-            )}
+            {poll.endTime && Number(poll.endTime.toString()) > new Date().getTime() ? (
+              isAuthenticated ? (
+                <Button
+                  type="submit"
+                  className="mt-4"
+                  disabled={!selectedOption || voteMutation.isPending}
+                >
+                  {voteMutation.isPending ? "Submitting..." : "Submit Vote"}
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  className="mt-4"
+                  onClick={() => login()}
+                >
+                  Login to Vote
+                </Button>
+              )
+            ) : null}
           </form>
         </div>
 
