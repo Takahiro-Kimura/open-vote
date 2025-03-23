@@ -175,6 +175,7 @@ export function CreatePollForm() {
               variant="outline"
               size="sm"
               onClick={() => append({ text: "", votes: 0 })}
+              disabled={fields.length >= 10}
             >
               <Plus className="h-4 w-4 mr-2" />
               選択肢を追加
