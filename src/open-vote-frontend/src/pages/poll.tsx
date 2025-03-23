@@ -12,7 +12,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ic } from "@/lib/ic";
 import { useAuth } from "@/lib/auth";
 import { ChartBarIcon, ClockIcon } from "@heroicons/react/24/solid";
-import { TwitterShareButton, XIcon, TelegramShareButton, TelegramIcon } from "react-share";
+import {
+  TwitterShareButton,
+  XIcon,
+  TelegramShareButton,
+  TelegramIcon,
+} from "react-share";
 
 export default function Poll() {
   const { id: pollId } = useParams();
@@ -69,32 +74,36 @@ export default function Poll() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-4xl font-bold mb-4">{poll.question}</h1>
-      <div className="flex items-center space-x-6 text-lg">
-        <div className="flex items-center space-x-2 text-primary">
-          <ChartBarIcon className="h-5 w-5" />
-          <span>Total Votes: {totalVotes}</span>
+      <div className="flex items-center space-x-6 text-lg justify-between">
+        <div>
+          <div className="flex items-center space-x-2 text-primary">
+            <ChartBarIcon className="h-5 w-5" />
+            <span>Total Votes: {totalVotes}</span>
+          </div>
+          <div className="flex items-center space-x-2 text-primary">
+            <ClockIcon className="h-5 w-5" />
+            <span>
+              {poll.endTime &&
+              Number(poll.endTime.toString()) > new Date().getTime()
+                ? `${formatDistanceToNow(
+                    new Date(Number(poll.endTime.toString()))
+                  )} left`
+                : poll.endTime
+                ? `Voting ended (${new Date(
+                    Number(poll.endTime.toString())
+                  ).toLocaleString()})`
+                : `Voting ended`}
+            </span>
+          </div>
         </div>
-        <div className="flex items-center space-x-2 text-primary">
-          <ClockIcon className="h-5 w-5" />
-          <span>
-            {poll.endTime &&
-            Number(poll.endTime.toString()) > new Date().getTime()
-              ? `${formatDistanceToNow(
-                  new Date(Number(poll.endTime.toString()))
-                )} left`
-              : poll.endTime
-              ? `Voting ended (${new Date(
-                  Number(poll.endTime.toString())
-                ).toLocaleString()})`
-              : `Voting ended`}
-          </span>
+        <div className="flex space-x-2">
+          <TwitterShareButton url={window.location.href} title={poll.question}>
+            <XIcon size={36} round />
+          </TwitterShareButton>
+          <TelegramShareButton url={window.location.href} title={poll.question}>
+            <TelegramIcon size={36} round />
+          </TelegramShareButton>
         </div>
-        <TwitterShareButton url={window.location.href} title={poll.question}>
-          <XIcon size={24} round />
-        </TwitterShareButton>
-        <TelegramShareButton url={window.location.href} title={poll.question}>
-          <TelegramIcon size={24} round />
-        </TelegramShareButton>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
