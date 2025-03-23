@@ -1,15 +1,23 @@
-import { useQuery } from '@tanstack/react-query';
-import { PollCard } from '@/components/polls/PollCard';
-import { queries } from '@/lib/queries';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useState, useEffect } from 'react';
+import { useQuery } from "@tanstack/react-query";
+import { PollCard } from "@/components/polls/PollCard";
+import { queries } from "@/lib/queries";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useState, useEffect } from "react";
 
 export default function Home() {
-  const [sortOrder, setSortOrder] = useState('endDate');
+  const [sortOrder, setSortOrder] = useState("endDate");
 
-  const { data: initialPolls, isLoading, error } = useQuery({
+  const {
+    data: initialPolls,
+    isLoading,
+    error,
+  } = useQuery({
     ...queries.polls,
-    select: (data) => data?.filter(poll => poll.endTime && Number(poll.endTime.toString()) > new Date().getTime())
+    select: (data) =>
+      data?.filter(
+        (poll) =>
+          poll.endTime && Number(poll.endTime.toString()) > new Date().getTime()
+      ),
   });
 
   const [polls, setPolls] = useState(initialPolls);
@@ -17,15 +25,24 @@ export default function Home() {
   useEffect(() => {
     if (initialPolls) {
       const sortedPolls = [...initialPolls];
-      if (sortOrder === 'endDate') {
+      if (sortOrder === "endDate") {
         sortedPolls.sort((a: any, b: any) => {
           if (!a.endTime || !b.endTime) return 0;
-          return new Date(Number(a.endTime.toString())).getTime() - new Date(Number(b.endTime.toString())).getTime();
+          return (
+            new Date(Number(a.endTime.toString())).getTime() -
+            new Date(Number(b.endTime.toString())).getTime()
+          );
         });
-      } else if (sortOrder === 'votes') {
+      } else if (sortOrder === "votes") {
         sortedPolls.sort((a: any, b: any) => {
-          const totalVotesA = a.options.reduce((acc: any, option: any) => acc + BigInt(option.votes), BigInt(0));
-          const totalVotesB = b.options.reduce((acc: any, option: any) => acc + BigInt(option.votes), BigInt(0));
+          const totalVotesA = a.options.reduce(
+            (acc: any, option: any) => acc + BigInt(option.votes),
+            BigInt(0)
+          );
+          const totalVotesB = b.options.reduce(
+            (acc: any, option: any) => acc + BigInt(option.votes),
+            BigInt(0)
+          );
           return Number(totalVotesB - totalVotesA);
         });
       }
@@ -34,7 +51,7 @@ export default function Home() {
   }, [initialPolls, sortOrder]);
 
   if (error) {
-    console.error('Error fetching polls:', error);
+    console.error("Error fetching polls:", error);
   }
 
   if (isLoading) {
@@ -52,37 +69,48 @@ export default function Home() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2">
         <h1 className="text-4xl font-bold">Active Polls</h1>
         <div className="flex items-center mt-4 md:mt-0">
-          <label htmlFor="sort" className="mr-2">Sort:</label>
+          <label htmlFor="sort" className="mr-2">
+            Sort:
+          </label>
           <div className="space-x-2">
             <button
               className={`border rounded px-2 py-1 ${
-                sortOrder === 'endDate' ? 'bg-[hsl(330_100%_90%)]' : ''
+                sortOrder === "endDate" ? "bg-[hsl(330_100%_90%)]" : ""
               }`}
               onClick={() => {
-                setSortOrder('endDate');
+                setSortOrder("endDate");
                 if (initialPolls) {
                   const sortedPolls = [...initialPolls];
                   sortedPolls.sort((a: any, b: any) => {
                     if (!a.endTime || !b.endTime) return 0;
-                    return new Date(Number(a.endTime.toString())).getTime() - new Date(Number(b.endTime.toString())).getTime();
+                    return (
+                      new Date(Number(a.endTime.toString())).getTime() -
+                      new Date(Number(b.endTime.toString())).getTime()
+                    );
                   });
                   setPolls(sortedPolls);
                 }
               }}
             >
-              End Date
+              Remaining time
             </button>
             <button
               className={`border rounded px-2 py-1 ${
-                sortOrder === 'votes' ? 'bg-[hsl(330_100%_90%)]' : ''
+                sortOrder === "votes" ? "bg-[hsl(330_100%_90%)]" : ""
               }`}
               onClick={() => {
-                setSortOrder('votes');
+                setSortOrder("votes");
                 if (initialPolls) {
                   const sortedPolls = [...initialPolls];
                   sortedPolls.sort((a: any, b: any) => {
-                    const totalVotesA = a.options.reduce((acc: any, option: any) => acc + BigInt(option.votes), BigInt(0));
-                    const totalVotesB = b.options.reduce((acc: any, option: any) => acc + BigInt(option.votes), BigInt(0));
+                    const totalVotesA = a.options.reduce(
+                      (acc: any, option: any) => acc + BigInt(option.votes),
+                      BigInt(0)
+                    );
+                    const totalVotesB = b.options.reduce(
+                      (acc: any, option: any) => acc + BigInt(option.votes),
+                      BigInt(0)
+                    );
                     return Number(totalVotesB - totalVotesA);
                   });
                   setPolls(sortedPolls);

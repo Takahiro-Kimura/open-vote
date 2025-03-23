@@ -78,7 +78,7 @@ export default function CompletedPolls() {
               }`}
               onClick={() => setSortBy("endTime")}
             >
-              End Date
+              Remaining time
             </button>
             <button
               className={`border rounded px-2 py-1 ${
