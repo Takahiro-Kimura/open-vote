@@ -11,10 +11,8 @@ import { formatDistanceToNow } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ic } from "@/lib/ic";
 import { useAuth } from "@/lib/auth";
-import {
-  ChartBarIcon,
-  ClockIcon,
-} from "@heroicons/react/24/solid";
+import { ChartBarIcon, ClockIcon } from "@heroicons/react/24/solid";
+import { TwitterShareButton, XIcon, TelegramShareButton, TelegramIcon } from "react-share";
 
 export default function Poll() {
   const { id: pollId } = useParams();
@@ -26,7 +24,7 @@ export default function Poll() {
   const { data: poll, isLoading } = useQuery(queries.poll(pollId!));
 
   const voteMutation = useMutation({
-    mutationFn: async() => {
+    mutationFn: async () => {
       if (!selectedOption) throw new Error("No option selected");
       const res = await ic.vote({ pollId: pollId!, option: selectedOption });
       if (!res.Ok) {
@@ -61,8 +59,12 @@ export default function Poll() {
     return <div>Poll not found</div>;
   }
 
-  const totalVotes = poll.options.reduce((acc, option) => acc + Number(option.votes), 0);
-  const pollEnded = poll.endTime && Number(poll.endTime.toString()) < new Date().getTime();
+  const totalVotes = poll.options.reduce(
+    (acc, option) => acc + Number(option.votes),
+    0
+  );
+  const pollEnded =
+    poll.endTime && Number(poll.endTime.toString()) < new Date().getTime();
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -75,8 +77,11 @@ export default function Poll() {
         <div className="flex items-center space-x-2 text-primary">
           <ClockIcon className="h-5 w-5" />
           <span>
-            {poll.endTime && Number(poll.endTime.toString()) > new Date().getTime()
-              ? `${formatDistanceToNow(new Date(Number(poll.endTime.toString())))} left`
+            {poll.endTime &&
+            Number(poll.endTime.toString()) > new Date().getTime()
+              ? `${formatDistanceToNow(
+                  new Date(Number(poll.endTime.toString()))
+                )} left`
               : poll.endTime
               ? `Voting ended (${new Date(
                   Number(poll.endTime.toString())
@@ -84,12 +89,19 @@ export default function Poll() {
               : `Voting ended`}
           </span>
         </div>
+        <TwitterShareButton url={window.location.href} title={poll.question}>
+          <XIcon size={24} round />
+        </TwitterShareButton>
+        <TelegramShareButton url={window.location.href} title={poll.question}>
+          <TelegramIcon size={24} round />
+        </TelegramShareButton>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <h2 className="text-2xl font-semibold mb-4">
-            {poll.endTime && Number(poll.endTime.toString()) > new Date().getTime()
+            {poll.endTime &&
+            Number(poll.endTime.toString()) > new Date().getTime()
               ? "Cast Your Vote"
               : "Options"}
           </h2>
@@ -105,34 +117,44 @@ export default function Poll() {
               className="space-y-4"
             >
               {(() => {
-                const maxVotes = Math.max(...poll.options.map(o => Number(o.votes)));
+                const maxVotes = Math.max(
+                  ...poll.options.map((o) => Number(o.votes))
+                );
 
                 return poll.options.map((option, index) => (
                   <div key={index} className="flex items-center space-x-2">
-                    <RadioGroupItem value={option.text} id={index.toString()} disabled={pollEnded} />
+                    <RadioGroupItem
+                      value={option.text}
+                      id={index.toString()}
+                      disabled={!!pollEnded}
+                    />
                     <Label htmlFor={index.toString()}>
-                      {option.text} {pollEnded ? `(${option.votes.toString()})` : null}
-                      {pollEnded && maxVotes > 0 && Number(option.votes) === maxVotes ? " 👑" : null}
+                      {option.text}{" "}
+                      {pollEnded ? `(${option.votes.toString()})` : null}
+                      {pollEnded &&
+                      maxVotes > 0 &&
+                      Number(option.votes) === maxVotes
+                        ? " 👑"
+                        : null}
                     </Label>
                   </div>
                 ));
               })()}
             </RadioGroup>
-            {poll.endTime && Number(poll.endTime.toString()) > new Date().getTime() ? (
+            {poll.endTime &&
+            Number(poll.endTime.toString()) > new Date().getTime() ? (
               isAuthenticated ? (
                 <Button
                   type="submit"
                   className="mt-4"
                   disabled={!selectedOption || voteMutation.isPending}
                 >
-                  {voteMutation.isPending ? "Submitting..." : "Submit Vote"}</Button>
+                  {voteMutation.isPending ? "Submitting..." : "Submit Vote"}
+                </Button>
               ) : (
-                <Button
-                  type="button"
-                  className="mt-4"
-                  onClick={() => login()}
-                >
-                  Login to Vote</Button>
+                <Button type="button" className="mt-4" onClick={() => login()}>
+                  Login to Vote
+                </Button>
               )
             ) : null}
           </form>
