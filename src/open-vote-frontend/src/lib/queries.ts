@@ -2,7 +2,6 @@ import { UseQueryOptions } from '@tanstack/react-query';
 import type { Poll } from '@shared/schema';
 import { ic } from './ic';
 
-// Define query keys as constants
 export const QueryKeys = {
   polls: ['polls'] as const,
   completedPolls: ['completed-polls'] as const,
