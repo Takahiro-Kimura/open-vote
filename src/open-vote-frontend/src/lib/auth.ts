@@ -1,5 +1,6 @@
 import { atom, useAtom } from 'jotai';
 import { AuthClient } from '@dfinity/auth-client';
+import { useEffect } from 'react';
 
 type AuthState = {
   isAuthenticated: boolean;
@@ -17,6 +18,7 @@ export function useAuth() {
   const [auth, setAuth] = useAtom(authAtom);
 
   const initializeAuth = async () => {
+    console.log("initialize auth");
     try {
       const authClient = await AuthClient.create();
       const isAuthenticated = await authClient.isAuthenticated();
@@ -27,9 +29,13 @@ export function useAuth() {
         setAuth({ isAuthenticated: true, principal });
       }
     } catch (error) {
-      console.error('Failed to initialize auth:', error);
+      console.error("Failed to initialize auth:", error);
     }
   };
+
+  useEffect(() => {
+    initializeAuth();
+  }, []);
 
   const login = async () => {
     try {
@@ -67,12 +73,9 @@ export function useAuth() {
     }
   };
 
-  // Initialize auth on component mount
-  initializeAuth();
-
   return {
     ...auth,
     login,
-    logout
+    logout,
   };
 }
