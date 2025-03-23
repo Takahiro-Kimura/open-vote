@@ -45,7 +45,13 @@ export default function MyPolls() {
             <Skeleton key={i} className="h-[300px]" />
           ))
         ) : (
-          polls?.map((poll) => <PollCard key={poll.id} poll={poll} />)
+          polls?.length === 0 ? (
+            <div className="col-span-full flex flex-col items-center justify-center">
+              <p className="mb-4">You don't have any polls yet. Create one now!</p>
+            </div>
+          ) : (
+            polls?.map((poll) => <PollCard key={poll.id} poll={poll} />)
+          )
         )}
       </div>
     </div>
