@@ -104,13 +104,19 @@ export default function Poll() {
               onValueChange={setSelectedOption}
               className="space-y-4"
             >
-              {poll.options.map((option, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <RadioGroupItem value={option.text} id={index.toString()} disabled={pollEnded} />
-                  <Label htmlFor={index.toString()}>
-                    {option.text} {pollEnded ? `(${option.votes.toString()})` : null}</Label>
-                </div>
-              ))}
+              {(() => {
+                const maxVotes = Math.max(...poll.options.map(o => Number(o.votes)));
+
+                return poll.options.map((option, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <RadioGroupItem value={option.text} id={index.toString()} disabled={pollEnded} />
+                    <Label htmlFor={index.toString()}>
+                      {option.text} {pollEnded ? `(${option.votes.toString()})` : null}
+                      {maxVotes > 0 && Number(option.votes) === maxVotes ? " 👑" : null}
+                    </Label>
+                  </div>
+                ));
+              })()}
             </RadioGroup>
             {poll.endTime && Number(poll.endTime.toString()) > new Date().getTime() ? (
               isAuthenticated ? (
