@@ -15,8 +15,23 @@ export default function Home() {
   const [polls, setPolls] = useState(initialPolls);
 
   useEffect(() => {
-    setPolls(initialPolls);
-  }, [initialPolls]);
+    if (initialPolls) {
+      const sortedPolls = [...initialPolls];
+      if (sortOrder === 'endDate') {
+        sortedPolls.sort((a: any, b: any) => {
+          if (!a.endTime || !b.endTime) return 0;
+          return new Date(Number(a.endTime.toString())).getTime() - new Date(Number(b.endTime.toString())).getTime();
+        });
+      } else if (sortOrder === 'votes') {
+        sortedPolls.sort((a: any, b: any) => {
+          const totalVotesA = a.options.reduce((acc: any, option: any) => acc + BigInt(option.votes), BigInt(0));
+          const totalVotesB = b.options.reduce((acc: any, option: any) => acc + BigInt(option.votes), BigInt(0));
+          return Number(totalVotesB - totalVotesA);
+        });
+      }
+      setPolls(sortedPolls);
+    }
+  }, [initialPolls, sortOrder]);
 
   if (error) {
     console.error('Error fetching polls:', error);
