@@ -74,7 +74,7 @@ export function Sidebar() {
             className="w-full mt-2"
             onClick={logout}
           >
-            ログアウト
+            Sign Out
           </Button>
           <div className="absolute bottom-16 left-4 flex flex-col">
             <TooltipProvider>
@@ -98,7 +98,7 @@ export function Sidebar() {
           className="w-full mt-2"
           onClick={login}
         >
-          ログイン
+          Sign in
         </Button>
       )}
     </div>

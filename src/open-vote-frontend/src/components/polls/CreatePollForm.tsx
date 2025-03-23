@@ -43,7 +43,7 @@ export function CreatePollForm() {
       options: [
         { text: "", votes: 0 },
         { text: "", votes: 0 },
-      ], // デフォルトで2つの選択肢
+      ], // Default to 2 options
     },
   });
 
@@ -54,7 +54,7 @@ export function CreatePollForm() {
 
   const createPollMutation = useMutation({
     mutationFn: async (data: Poll) => {
-      // データを整形
+      // Format the data
       const formattedData = {
         question: data.question,
         end_time: [data.endTime],
@@ -74,18 +74,18 @@ export function CreatePollForm() {
     },
     onSuccess: (res) => {
       toast({
-        title: "成功",
-        description: "投票が作成されました！",
+        title: "Success",
+        description: "Poll created successfully!",
       });
-      // キャッシュを更新して画面遷移
+      // Update cache and transition screen
       queryClient.invalidateQueries({ queryKey: [QueryKeys.polls] });
       setLocation(`/poll/${res.Ok}`);
     },
     onError: (error) => {
       console.error("Poll creation error:", error);
       toast({
-        title: "エラー",
-        description: "投票の作成に失敗しました。もう一度お試しください。",
+        title: "Error",
+        description: "Failed to create poll. Please try again.",
         variant: "destructive",
       });
     },
@@ -104,7 +104,7 @@ export function CreatePollForm() {
     <Form {...form}>
       <form
         onSubmit={(e) => {
-          e.preventDefault(); // デフォルト動作を止める
+          e.preventDefault(); // Stop default action
           onSubmit(e);
         }}
         className="space-y-6"
@@ -114,9 +114,9 @@ export function CreatePollForm() {
           name="question"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>質問</FormLabel>
+              <FormLabel>Question</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="投票の質問を入力" />
+                <Input {...field} placeholder="Enter poll question" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -130,7 +130,7 @@ export function CreatePollForm() {
             const [open, setOpen] = useState(false);
             return (
               <FormItem>
-                <FormLabel>終了日時</FormLabel>
+                <FormLabel>End Date</FormLabel>
                 <div className="flex gap-2">
                   <Button
                     type="button"
@@ -205,7 +205,7 @@ export function CreatePollForm() {
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <FormLabel>選択肢</FormLabel>
+            <FormLabel>Options</FormLabel>
             <Button
               type="button"
               variant="outline"
@@ -214,7 +214,7 @@ export function CreatePollForm() {
               disabled={fields.length >= 10}
             >
               <Plus className="h-4 w-4 mr-2" />
-              選択肢を追加
+              Add Option
             </Button>
           </div>
 
@@ -226,7 +226,7 @@ export function CreatePollForm() {
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <Input {...field} placeholder={`選択肢 ${index + 1}`} />
+                      <Input {...field} placeholder={`Option ${index + 1}`} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -247,7 +247,7 @@ export function CreatePollForm() {
         </div>
 
         <Button type="submit" disabled={createPollMutation.isPending}>
-          {createPollMutation.isPending ? "作成中..." : "投票を作成"}
+          {createPollMutation.isPending ? "Creating..." : "Create Poll"}
         </Button>
       </form>
     </Form>
