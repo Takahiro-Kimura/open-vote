@@ -14,7 +14,7 @@ export function PollCard({ poll }: PollCardProps) {
   const totalVotes = poll.options.reduce((sum, option) => sum + (Number(option.votes) || 0), 0);
 
   return (
-    <Card className="w-full hover:shadow-lg transition-shadow">
+    <Card className="w-full hover:shadow-lg transition-shadow flex flex-col">
       <CardHeader>
         <h3 className="text-xl font-bold">{poll.question}</h3>
         <p className="text-sm text-muted-foreground">
@@ -41,7 +41,7 @@ export function PollCard({ poll }: PollCardProps) {
           })}
         </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="mt-auto" style={{ marginTop: 'auto' }}>
         <Button onClick={() => setLocation(`/poll/${poll.id}`)} className="w-full">
           View Poll
         </Button>
