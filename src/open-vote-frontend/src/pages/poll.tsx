@@ -62,6 +62,7 @@ export default function Poll() {
   }
 
   const totalVotes = poll.options.reduce((acc, option) => acc + Number(option.votes), 0);
+  const pollEnded = poll.endTime && Number(poll.endTime.toString()) < new Date().getTime();
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -105,8 +106,9 @@ export default function Poll() {
             >
               {poll.options.map((option, index) => (
                 <div key={index} className="flex items-center space-x-2">
-                  <RadioGroupItem value={option.text} id={index.toString()} />
-                  <Label htmlFor={index.toString()}>{option.text}</Label>
+                  <RadioGroupItem value={option.text} id={index.toString()} disabled={pollEnded} />
+                  <Label htmlFor={index.toString()}>
+                    {option.text} {pollEnded ? `(${option.votes.toString()})` : null}</Label>
                 </div>
               ))}
             </RadioGroup>
@@ -117,16 +119,14 @@ export default function Poll() {
                   className="mt-4"
                   disabled={!selectedOption || voteMutation.isPending}
                 >
-                  {voteMutation.isPending ? "Submitting..." : "Submit Vote"}
-                </Button>
+                  {voteMutation.isPending ? "Submitting..." : "Submit Vote"}</Button>
               ) : (
                 <Button
                   type="button"
                   className="mt-4"
                   onClick={() => login()}
                 >
-                  Login to Vote
-                </Button>
+                  Login to Vote</Button>
               )
             ) : null}
           </form>
