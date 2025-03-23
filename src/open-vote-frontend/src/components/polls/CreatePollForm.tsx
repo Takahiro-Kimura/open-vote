@@ -21,7 +21,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { format } from "date-fns";
-import { CalendarIcon, Plus, Trash2 } from "lucide-react";
+import { CalendarIcon, Plus, Trash2, X } from "lucide-react";
+import { useState } from "react";
 import { ic } from "@/lib/ic";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
@@ -123,43 +124,47 @@ export function CreatePollForm() {
         <FormField
           control={form.control}
           name="endTime"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>終了日時</FormLabel>
-              <FormControl>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={`w-full justify-start text-left font-normal ${
-                        !field.value && "text-muted-foreground"
-                      }`}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {field.value ? (
-                        format(new Date(Number(field.value)), "PPP")
-                      ) : (
-                        <span>終了日を選択</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={field.value ? new Date(Number(field.value)) : undefined}
-                      onSelect={(date) => {
-                        if (date) {
-                          field.onChange(BigInt(date.getTime()));
-                        }
-                      }}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          render={({ field }) => {
+            const [open, setOpen] = useState(false);
+            return (
+              <FormItem>
+                <FormLabel>終了日時</FormLabel>
+                <FormControl>
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={`w-full justify-start text-left font-normal bg-white ${
+                          !field.value && "text-muted-foreground"
+                        }`}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {field.value ? (
+                          format(new Date(Number(field.value)), "PPP")
+                        ) : (
+                          <span>終了日を選択</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={field.value ? new Date(Number(field.value)) : undefined}
+                        onSelect={(date) => {
+                          if (date) {
+                            field.onChange(BigInt(date.getTime()));
+                            setOpen(false);
+                          }
+                        }}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
 
         <div className="space-y-4">
