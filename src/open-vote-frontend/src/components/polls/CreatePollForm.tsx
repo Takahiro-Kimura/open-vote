@@ -36,7 +36,7 @@ export function CreatePollForm() {
     resolver: zodResolver(CreatePollSchema),
     defaultValues: {
       question: "",
-      endTime: BigInt(4102412400),
+      endTime: BigInt(4102412400000),
       options: [
         { text: "", votes: 0 },
         { text: "", votes: 0 },
@@ -51,7 +51,6 @@ export function CreatePollForm() {
 
   const createPollMutation = useMutation({
     mutationFn: async (data: Poll) => {
-      console.log(99312, data.options);
       // データを整形
       const formattedData = {
         question: data.question,
@@ -60,20 +59,24 @@ export function CreatePollForm() {
       };
       console.log("Submitting poll data:", formattedData);
       try {
-        return await ic.createPoll(formattedData);
+        const res = await ic.createPoll(formattedData);
+        if (!res.Ok) {
+          throw new Error(res.Err);
+        }
+        return res;
       } catch (e) {
         console.log(e);
         throw e;
       }
     },
-    onSuccess: (pollId) => {
+    onSuccess: (res) => {
       toast({
         title: "成功",
         description: "投票が作成されました！",
       });
       // キャッシュを更新して画面遷移
       queryClient.invalidateQueries({ queryKey: [QueryKeys.polls] });
-      setLocation(`/poll/${pollId}`);
+      setLocation(`/poll/${res.Ok}`);
     },
     onError: (error) => {
       console.error("Poll creation error:", error);

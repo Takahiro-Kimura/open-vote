@@ -42,13 +42,13 @@ const Vote = IDL.Record({
 
 export const idlFactory = ({ IDL }: { IDL: any }) => {
   return IDL.Service({
-    create_poll: IDL.Func([CreatePollRequest], [IDL.Text], ["update"]),
+    create_poll: IDL.Func([CreatePollRequest], [IDL.Variant({ Ok: IDL.Text, Err: IDL.Text })], ["update"]),
     get_poll: IDL.Func([IDL.Text], [IDL.Opt(Poll)], ["query"]),
     get_poll_results: IDL.Func([IDL.Text], [ResultPollResults], ["query"]),
     get_polls: IDL.Func([], [IDL.Vec(Poll)], ["query"]),
     get_principal: IDL.Func([], [IDL.Text], ["query"]),
     get_user_polls: IDL.Func([IDL.Text], [IDL.Vec(Poll)], ["query"]),
     get_user_votes: IDL.Func([IDL.Text], [IDL.Vec(Vote)], ["query"]),
-    vote: IDL.Func([IDL.Text, VoteRequest], [[IDL.Text, IDL.Text]], ["update"]),
+    vote: IDL.Func([IDL.Text, VoteRequest], [IDL.Variant({ Ok: IDL.Text, Err: IDL.Text })], ["update"]),
   });
 };

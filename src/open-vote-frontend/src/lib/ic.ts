@@ -40,7 +40,7 @@ class ICClient {
     return agent;
   }
 
-  async createPoll(poll: any): Promise<string> {
+  async createPoll(poll: any): Promise<{Ok: string; Err: string}> {
     await this.changeAgent();
     // todo: anyをCreatePollにする
     try {
@@ -98,11 +98,11 @@ class ICClient {
     }
   }
 
-  async vote(request: VoteRequest): Promise<void> {
+  async vote(request: VoteRequest): Promise<{Ok: string; Err: string}> {
     await this.changeAgent();
     try {
       console.log("Submitting vote:", request);
-      await this.actor.vote(request.pollId, { option: request.option });
+      return await this.actor.vote(request.pollId, { option: request.option });
       console.log("Vote submitted successfully");
     } catch (error) {
       console.error("Failed to vote:", error);

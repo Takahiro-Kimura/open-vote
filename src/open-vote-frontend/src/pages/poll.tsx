@@ -21,9 +21,13 @@ export default function Poll() {
   const { data: poll, isLoading } = useQuery(queries.poll(pollId!));
 
   const voteMutation = useMutation({
-    mutationFn: () => {
+    mutationFn: async() => {
       if (!selectedOption) throw new Error("No option selected");
-      return ic.vote({ pollId: pollId!, option: selectedOption });
+      const res = await ic.vote({ pollId: pollId!, option: selectedOption });
+      if (!res.Ok) {
+        throw new Error(res.Err);
+      }
+      return res;
     },
     onSuccess: () => {
       toast({
