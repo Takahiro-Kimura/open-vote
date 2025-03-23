@@ -97,7 +97,7 @@ export default function Poll() {
           </div>
         </div>
         <div className="flex space-x-2">
-          <TwitterShareButton url={window.location.href} title={poll.question}>
+          <TwitterShareButton url={window.location.href} title={`${poll.question}  #OpenVote`}>
             <XIcon size={36} round />
           </TwitterShareButton>
           <TelegramShareButton url={window.location.href} title={poll.question}>
