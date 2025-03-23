@@ -65,7 +65,7 @@ export default function Poll() {
       <p className="text-sm text-muted-foreground">
         {poll.endTime && Number(poll.endTime.toString()) > new Date().getTime()
           ? `${formatDistanceToNow(new Date(Number(poll.endTime.toString())))} left`
-          : 'Voting ended'}
+          : poll.endTime ? `Voting ended (${new Date(Number(poll.endTime.toString())).toLocaleDateString()})` : `Voting ended`}
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
