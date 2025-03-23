@@ -8,13 +8,13 @@ export function Header() {
   const { isAuthenticated, login, logout, principal } = useAuth();
 
   return (
-    <div className="flex items-center justify-between h-16 bg-header border-b border-header-border p-4">
+    <div className="flex items-center justify-between h-16 bg-header border-b border-header-border p-3">
       <div className="flex items-center gap-2">
         <BarChart2 className="w-8 h-8 text-primary" />
         <h1 className="text-2xl font-bold hidden md:inline">OpenVote</h1>
       </div>
 
-      <nav className="flex items-center gap-4">
+      <nav className="flex items-center">
         <Link href="/">
           <Button
             variant="ghost"
