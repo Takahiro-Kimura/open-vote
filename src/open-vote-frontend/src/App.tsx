@@ -7,6 +7,7 @@ import Home from "./pages/home";
 import CreatePoll from "./pages/create-poll";
 import Poll from "./pages/poll";
 import MyPolls from "./pages/my-polls";
+import MyVotes from "./pages/my-votes";
 import CompletedPolls from "./pages/completed-polls";
 import { Header } from "./components/layout/Header";
 
@@ -20,6 +21,7 @@ function Router() {
           <Route path="/create-poll" component={CreatePoll} />
           <Route path="/poll/:id" component={Poll} />
           <Route path="/my-polls" component={MyPolls} />
+          <Route path="/my-votes" component={MyVotes} />
           <Route component={NotFound} />
         </Switch>
       </main>

@@ -1,12 +1,7 @@
-import { Link, useLocation } from 'wouter';
-import { Actor } from "@dfinity/agent";
-import { AuthClient } from "@dfinity/auth-client";
-import { open_vote_backend } from "declarations/open-vote-backend";
-import { Button } from '@/components/ui/button';
-import { PlusCircle, BarChart2, User, Home, ClockIcon } from 'lucide-react';
-import { useAuth } from '@/lib/auth';
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Link, useLocation } from "wouter";
+import { Button } from "@/components/ui/button";
+import { PlusCircle, BarChart2, User, Home, ClockIcon } from "lucide-react";
+import { useAuth } from "@/lib/auth";
 
 export function Header() {
   const [location] = useLocation();
@@ -24,7 +19,9 @@ export function Header() {
           <Button
             variant="ghost"
             className={`justify-start ${
-              location === '/' ? 'bg-header-accent text-header-accent-foreground' : 'hover:bg-header-accent/50'
+              location === "/"
+                ? "bg-header-accent text-header-accent-foreground"
+                : "hover:bg-header-accent/50"
             }`}
           >
             <Home className="w-2 h-2 md:mr-0" />
@@ -36,7 +33,9 @@ export function Header() {
           <Button
             variant="ghost"
             className={`justify-start ${
-              location === '/completed-polls' ? 'bg-header-accent text-header-accent-foreground' : 'hover:bg-header-accent/50'
+              location === "/completed-polls"
+                ? "bg-header-accent text-header-accent-foreground"
+                : "hover:bg-header-accent/50"
             }`}
           >
             <ClockIcon className="w-2 h-2 md:mr-0" />
@@ -48,7 +47,9 @@ export function Header() {
           <Button
             variant="ghost"
             className={`justify-start ${
-              location === '/create-poll' ? 'bg-header-accent text-header-accent-foreground' : 'hover:bg-header-accent/50'
+              location === "/create-poll"
+                ? "bg-header-accent text-header-accent-foreground"
+                : "hover:bg-header-accent/50"
             }`}
           >
             <PlusCircle className="w-2 h-2 md:mr-0" />
@@ -60,28 +61,34 @@ export function Header() {
           <Button
             variant="ghost"
             className={`justify-start ${
-              location === '/my-polls' ? 'bg-header-accent text-header-accent-foreground' : 'hover:bg-header-accent/50'
+              location === "/my-polls"
+                ? "bg-header-accent text-header-accent-foreground"
+                : "hover:bg-header-accent/50"
             }`}
           >
             <User className="w-2 h-2 md:mr-0" />
             <span className="hidden md:inline">My Polls</span>
           </Button>
         </Link>
+      
+        <Link href="/my-votes">
+          <Button
+            variant="ghost"
+            className={`justify-start ${
+              location === "/my-votes"
+                ? "bg-header-accent text-header-accent-foreground"
+                : "hover:bg-header-accent/50"
+            }`}
+          >
+            <User className="w-2 h-2 md:mr-0" />
+            <span className="hidden md:inline">My Votes</span>
+          </Button>
+        </Link>
       </nav>
       {isAuthenticated ? (
-        <>
-          <Button
-            onClick={logout}
-          >
-            Sign Out
-          </Button>
-        </>
+        <Button onClick={logout}>Sign Out</Button>
       ) : (
-        <Button
-          onClick={login}
-        >
-          Sign in
-        </Button>
+        <Button onClick={login}>Sign in</Button>
       )}
     </div>
   );
