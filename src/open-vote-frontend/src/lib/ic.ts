@@ -98,6 +98,18 @@ class ICClient {
     }
   }
 
+  async getUserVotes(principal: string): Promise<Poll[]> {
+    try {
+      console.log("Fetching user votes for principal:", principal);
+      const polls = await this.actor.get_user_votes(principal);
+      console.log("Fetched user votes:", polls);
+      return polls || [];
+    } catch (error) {
+      console.error("Failed to get user votes:", error);
+      return []; // エラー時は空配列を返す
+    }
+  }
+
   async vote(request: VoteRequest): Promise<{Ok: string; Err: string}> {
     await this.changeAgent();
     try {

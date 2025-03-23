@@ -8,6 +8,7 @@ export const QueryKeys = {
   completedPolls: ['completed-polls'] as const,
   poll: (id: string) => ['poll', id] as const,
   userPolls: (principal: string) => ['user-polls', principal] as const,
+  userVotes: (principal: string) => ['user-votes', principal] as const,
 };
 
 // Define query options
@@ -37,6 +38,13 @@ export const queries = {
   userPolls: (principal: string | null) => ({
     queryKey: QueryKeys.userPolls(principal ?? ''),
     queryFn: () => principal ? ic.getUserPolls(principal) : Promise.resolve([]),
+    enabled: !!principal,
+    retry: 1,
+  }) as UseQueryOptions<Poll[]>,
+
+  userVotes: (principal: string | null) => ({
+    queryKey: QueryKeys.userVotes(principal ?? ''),
+    queryFn: () => principal ? ic.getUserVotes(principal) : Promise.resolve([]),
     enabled: !!principal,
     retry: 1,
   }) as UseQueryOptions<Poll[]>,
