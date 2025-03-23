@@ -51,9 +51,11 @@ export default function MyVotes() {
           ))
         ) : votes && Array.isArray(votes) ? (
           votes?.map((vote: Vote) => (
-            <div key={vote.poll_id} className="border rounded-md p-4">
-              <p>Poll: {vote.poll_id}</p>
-              <p>Choice: {vote.option}</p>
+            <div key={vote.poll_id} className="border rounded-md p-4 flex items-center justify-between">
+              <p>Choice: <span className="font-bold">{vote.option}</span></p>
+              <a href={`/poll/${vote.poll_id}`}>
+                <Button>View Poll</Button>
+              </a>
             </div>
           ))
         ) : (
