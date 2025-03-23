@@ -41,7 +41,7 @@ export default function Home() {
           <div className="space-x-2">
             <button
               className={`border rounded px-2 py-1 ${
-                sortOrder === 'endDate' ? 'bg-gray-200' : ''
+                sortOrder === 'endDate' ? 'bg-[hsl(330_100%_90%)]' : ''
               }`}
               onClick={() => {
                 setSortOrder('endDate');
@@ -59,7 +59,7 @@ export default function Home() {
             </button>
             <button
               className={`border rounded px-2 py-1 ${
-                sortOrder === 'votes' ? 'bg-gray-200' : ''
+                sortOrder === 'votes' ? 'bg-[hsl(330_100%_90%)]' : ''
               }`}
               onClick={() => {
                 setSortOrder('votes');
