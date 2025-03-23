@@ -50,15 +50,27 @@ export default function CompletedPolls() {
 
   return (
     <div className="p-6">
-      <h1 className="text-4xl font-bold mb-8">Completed Polls</h1>
-      <select
-        value={sortBy}
-        onChange={(e) => setSortBy(e.target.value)}
-        className="mb-4"
-      >
-        <option value="endTime">投票終了日</option>
-        <option value="totalVotes">Total Votes</option>
-      </select>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-4xl font-bold">Completed Polls</h1>
+        <div className="space-x-2">
+          <button
+            className={`border rounded px-2 py-1 ${
+              sortBy === 'endTime' ? 'bg-[hsl(330_100%_90%)]' : ''
+            }`}
+            onClick={() => setSortBy('endTime')}
+          >
+            投票終了日
+          </button>
+          <button
+            className={`border rounded px-2 py-1 ${
+              sortBy === 'totalVotes' ? 'bg-[hsl(330_100%_90%)]' : ''
+            }`}
+            onClick={() => setSortBy('totalVotes')}
+          >
+            Total Votes
+          </button>
+        </div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sortedPolls?.map((poll) => (
           <PollCard key={poll.id} poll={poll} />
