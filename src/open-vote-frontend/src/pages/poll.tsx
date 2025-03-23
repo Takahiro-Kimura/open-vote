@@ -56,9 +56,12 @@ export default function Poll() {
     return <div>Poll not found</div>;
   }
 
+  const totalVotes = poll.options.reduce((acc, option) => acc + Number(option.votes), 0);
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-4xl font-bold mb-4">{poll.question}</h1>
+      <p className="text-sm text-muted-foreground">Total Votes: {totalVotes}</p>
       <p className="text-sm text-muted-foreground">
         {poll.endTime && Number(poll.endTime.toString()) > new Date().getTime()
           ? `${formatDistanceToNow(new Date(Number(poll.endTime.toString())))} left`
