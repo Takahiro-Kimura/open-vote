@@ -79,7 +79,7 @@ export default function Poll() {
               : poll.endTime
               ? `Voting ended (${new Date(
                   Number(poll.endTime.toString())
-                ).toLocaleDateString()})`
+                ).toLocaleString()})`
               : `Voting ended`}
           </span>
         </div>
