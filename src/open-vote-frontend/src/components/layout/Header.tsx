@@ -59,7 +59,7 @@ const Modal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
           >
-            閉じる
+            {language === "En" ? "close" : "閉じる"}
           </button>
         </div>
       </div>
