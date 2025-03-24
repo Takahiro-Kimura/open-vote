@@ -1,5 +1,8 @@
 {
   "open-vote-backend": {
     "ic": "dgic5-vaaaa-aaaaa-qafta-cai"
+  },
+  "open-vote-frontend": {
+    "ic": "u4ebu-oiaaa-aaaaa-qagmq-cai"
   }
 }

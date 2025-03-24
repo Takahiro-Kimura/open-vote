@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, BarChart2, User, Home, ClockIcon } from "lucide-react";
 import { useAuth } from "@/lib/auth";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Modal: React.FC<{ isOpen: boolean; onClose: () => void; children: React.ReactNode }> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -30,12 +30,20 @@ export function Header() {
   const { isAuthenticated, login, logout, principal } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('hasVisited');
+    if (!hasVisited) {
+      setIsModalOpen(true);
+    }
+  }, []);
+
   const openModal = () => {
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    localStorage.setItem('hasVisited', 'true');
   };
 
   return (
