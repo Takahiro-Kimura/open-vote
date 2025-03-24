@@ -12,7 +12,7 @@ export default function CreatePoll() {
         <div className="flex flex-col items-center justify-center">
           <p className="mb-4">Please log in to create a poll.</p>
           <Button onClick={() => login()}>
-            Login to create a poll
+            Sign in to create a poll
           </Button>
         </div>
       ) : (

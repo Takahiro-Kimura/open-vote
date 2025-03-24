@@ -162,7 +162,7 @@ export default function Poll() {
                 </Button>
               ) : (
                 <Button type="button" className="mt-4" onClick={() => login()}>
-                  Login to Vote
+                  Sign in to Vote
                 </Button>
               )
             ) : null}

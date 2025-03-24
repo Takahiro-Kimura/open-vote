@@ -37,8 +37,8 @@ export default function MyPolls() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {!principal ? (
           <div className="col-span-full flex flex-col items-center justify-center">
-            <p className="mb-4">Please log in to display your polls.</p>
-            <Button onClick={() => login()}>Login to display your polls</Button>
+            <p className="mb-4">Please sign in to display your polls.</p>
+            <Button onClick={() => login()}>Sign in to display your polls</Button>
           </div>
         ) : isLoading ? (
           [...Array(6)].map((_, i) => (
